@@ -200,7 +200,7 @@ class Contract colorA
 
 ## Input / Output Data
 
-**Input**** in matomo format **
+**Input in matomo format **
 
 WALRUC uses [matomo data format](https://developer.matomo.org/guides/log-data) as input data format.
 
@@ -408,7 +408,7 @@ sequenceDiagram
 
 ## Configuration and deployment settings
 
-**Installation and deployment**** :**
+**Installation and deployment :**
 
 - Install Matomo on a server
 
