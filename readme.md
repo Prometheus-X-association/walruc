@@ -4,8 +4,6 @@ Web Analytics Learning Records Universal Connector allows for the integration of
 
 ## Technical usage scenarios & Features
 
-*See [BB info for use cases (WP2)](https://docs.google.com/spreadsheets/d/1oKWCe0XqRJ1d-wZfKnFtZb2fS0NetFMEXX4OWSyiwDU/edit#gid=1137874968) spreadsheet.*
-
 **Key functionalities:**
 
 - WALRUC converts web browsing analytics data into xAPI statement
@@ -52,8 +50,6 @@ A training organization can use WALRUC service to track and analyze the engageme
 6. The organization can also use the data to track the overall engagement and effectiveness of their website, and make improvements as needed.
 
 ## Requirements
-
-*See the [Requirements spreadsheets](https://docs.google.com/spreadsheets/d/1_woXk9aom9tDLeOff_G2cQngiwdFP7_AS2Kw-h55kgs/edit#gid=1026755951)*
 
 | Requirement ID | Short description | BB input format | BB output format | Any other constraints | Verified by scenario | Requirement type |
 |---|---|---|---|---|---|---|
@@ -160,41 +156,17 @@ block-beta
 
 columns 6
 
-Matomo:4 space:2
-
-WALRUC:4
-
-Connector :1
-
-block:group
-
-columns 1
-
-Identity Consent Contract
-
-end
-
-LRS:4
+Matomo:1 WALRUC_PDC:1 WALRUC:1 WALRUC_PDC_:1 Organization_PDC:1 LRS:1
 
 classDef colorA fill:#D22FF7,color:#fff
-
 classDef colorEx fill:#01D1D1,color:#fff
-
 classDef colorED fill:#6E7176,color:#fff
-
 class Matomo colorEx
-
 class LRS colorEx
-
 class WALRUC colorED
-
-class Connector colorA
-
-class Identity colorA
-
-class Consent colorA
-
-class Contract colorA
+class WALRUC_PDC colorA
+class WALRUC_PDC_ colorA
+class Organization_PDC colorA
 
 ```
 
@@ -349,30 +321,27 @@ To convert the given Matomo log example into an xAPI statement, we'll map the mo
 Architecture
 ```mermaid
 classDiagram
-   WALRUC <|-- Connector
-   WALRUC <|-- Consent_Contracts
-   Connector <|-- Identity
-   Connector <|-- Consent
-   Connector <|-- Contract
+   WALRUC <|-- WALRUC_PDC
+   WALRUC_PDC <|-- WALRUC
+   WALRUC_PDC <|-- CC_PDC
+   CC_PDC <|-- WALRUC_PDC
+   CC_PDC <|-- Consent_Contracts
+   Consent_Contracts <|-- CC_PDC
    WALRUC: convert()
    WALRUC: send_lrs()
-   class Connector{
+   class WALRUC_PDC{
      identity()
-     consent()
+     catalog()
      contract()
+     consent()
+     other_core_BBs()
    }
-   class Consent{
-     bool consent
-     consent_sign()
-   }
-   class Identity{
-     String first name
-     String last name
-     id()
-   }
-   class Contract{
-     bool contract
-     contract_sign()
+   class CC_PDC{
+     identity()
+     catalog()
+     contract()
+     consent()
+     other_core_BBs()
    }
    class Consent_Contracts{
      bool week[7]
@@ -390,19 +359,21 @@ WALRUC building blocks communicate with other building blocks, in a precise orde
 sequenceDiagram
    actor User as User
    User->>Matomo: Made a web browsing trace
-   Matomo->>WALRUC:  Requests to send trace
-   WALRUC->>Connector: Request for information on identity, consent and contract
-   Connector->>Identity: Request for identity information
-   Identity->>Connector: Provide identity information
-   Connector->>Consent: Request for consent information
-   Identity->>Consent: Provide consent information
-   Connector->>Contract: Request for contract information
-   Contract->>Connector: Provide contract information
-   Connector->>WALRUC: Identity, consent and contract sent and approved
-   WALRUC->>Consent/Contract: Request profil consent of user
-   Consent/Contract->>WALRUC: Provide profil consent of user
-   WALRUC->>Matomo: Attest authorization to import trace
-   WALRUC->>WALRUC: Convert the trace into xAPI format (LRC?)
+   Matomo->>Organization_PDC: Requests to send trace to LRS organization
+   Organization_PDC->>Data_Intermediary: Request for information on identity, consent and contract
+   Data_Intermediary->>Identity: Request for identity information
+   Identity->>Data_Intermediary: Provide identity information
+   Data_Intermediary->>Consent: Request for consent information
+   Consent->>Data_Intermediary: Provide consent information
+   Data_Intermediary->>Contract: Request for contract information
+   Contract->>Data_Intermediary: Provide contract information
+   Data_Intermediary->>Organization_PDC: Identity, consent and contract sent and approved
+   Organization_PDC->>Consent/Contract: Request profil consent of user
+   Consent/Contract->>Organization_PDC: Provide profil consent of user
+   Organization_PDC->>Organization_PDC: Attest authorization to export trace to WALRUC
+   Organization_PDC->>WALRUC_PDC: Export the trace to WALRUC PDC
+   WALRUC_PDC->>WALRUC: Export the trace
+   WALRUC->>WALRUC: Convert the trace into xAPI format
    WALRUC->>LRS: Provide trace
 ```
 
@@ -421,8 +392,6 @@ sequenceDiagram
 - Add LRS url and credential into WALRUC settings
 
 ## Third Party Components & Licenses
-
-*See the "**[EDGE third party/background components](https://docs.google.com/spreadsheets/d/13Lf4PfVnA_lAk-7dMeIy0QRxHnarxMcsS8EaLjyOlBA/edit#gid=1385858520)**" spreadsheet.*
 
 **External components and licenses :**
 
@@ -463,8 +432,6 @@ paths: \
 ### Test plan
 
 *Testing strategy, tools and methods chosen, methods for acceptance criteria.*
-
-*[To be detailed](https://drive.google.com/drive/folders/1gId01K0uelxkqrO0yAgiysT3jrTi5foj)**.*
 
 Before putting V0 into the hands of users, we need to make sure that WALRUC works in a number of applications. We'll need to test it at least on our Becomino website which is equipped with Matomo and a LRS (Learning Locker). The tests will be conclusive if we see the matomo logs correctly converted into valid xAPI statements in the LRS.
 
