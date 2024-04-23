@@ -1,4 +1,4 @@
-# WALRUC Design Document
+# Web Analytics Learning Records Universal Connector (WALRUC) BB – Design Document
 
 Web Analytics Learning Records Universal Connector allows for the integration of web analytics data with a Learning Record Store (LRS) using the xAPI (Experience API) standard. It enables the conversion of analytics data, such as the data collected by Matomo, into an xAPI format that can be stored and tracked in a LRS.
 
