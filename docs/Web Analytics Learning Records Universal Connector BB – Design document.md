@@ -53,10 +53,10 @@ A training organization can use WALRUC service to track and analyze the engageme
 
 | Requirement ID | Short description | BB input format | BB output format | Any other constraints | Verified by scenario | Requirement type |
 |---|---|---|---|---|---|---|
-| BB-REQ_ID__1 | WALRUC must request building block consent via the ARIANE connector | API call | API response |  |  |  |
-| BB-REQ_ID__1.1 | Individuals must consent to the use of their web analytics data as learning records in the WALRUC of the organization | API call | API response | If the answer is no, the data cannot be used, nor transferred into or from the PLRS. If the answer is yer, the data can be used, and transferred into or from the PLRS. | BB-SC-WALRUC-01 | DEP |
+| BB-REQ_ID__1 | WALRUC must request building block consent via the Prometheus-X Dataspace Connector | API call | API response |  |  |  |
+| BB-REQ_ID__1.1 | Individuals must consent to the use of their web analytics data as learning records in the WALRUC of the organization | API call | API response | If the answer is no, the data cannot be used, nor transferred into or from the WALRUC. If the answer is yer, the data can be used, and transferred into or from the WALRUC. | BB-SC-WALRUC-01 | DEP |
 | BB-REQ_ID__1.2 | Consent must be asked and verified in less than 30s | API call | API response |  | BB-SC-WALRUC-02 | PERF |
-| BB-REQ_ID__2 | WALRUC must request contracts from the building block consent via the ARIANE connector | API call | API response |  |  |  |
+| BB-REQ_ID__2 | WALRUC must request contracts from the building block consent via the Prometheus-X Dataspace Connector | API call | API response |  |  |  |
 | BB-REQ_ID__2.1 | The WALRUC must check with the contract manager through the Dataspace connector if a contract for the corresponding organization exists | API call | API response | If the answer is no, the data cannot be accessed, nor transferred into or from the PLRS. If the answer is yer, the data can be accessed, and transferred into or from the PLRS. | BB-SC-WALRUC-03 | DEP |
 | BB-REQ_ID__2.2 | Contract must be asked and verified in less than 30s | API call | API response |  | BB-SC-WALRUC-04 | PERF |
 | BB-REQ_ID__3 | WALRUC must connect with BB Consent/contracts negotiating agent (EDGE-Skill) |  |  |  |  |  |
@@ -167,12 +167,12 @@ class WALRUC colorED
 class WALRUC_PDC colorA
 class WALRUC_PDC_ colorA
 class Organization_PDC colorA
-
 ```
+PDC : Prometheus-X Dataspace Connector
 
 ## Input / Output Data
 
-**Input in matomo format **
+**Input in matomo format**
 
 WALRUC uses [matomo data format](https://developer.matomo.org/guides/log-data) as input data format.
 
@@ -334,14 +334,12 @@ classDiagram
      catalog()
      contract()
      consent()
-     other_core_BBs()
    }
    class CC_PDC{
      identity()
      catalog()
      contract()
      consent()
-     other_core_BBs()
    }
    class Consent_Contracts{
      bool week[7]
@@ -352,6 +350,7 @@ classDiagram
      change_track()
    }
 ```
+PDC : Prometheus-X Dataspace Connector
 
 Dynamic Behaviour
 WALRUC building blocks communicate with other building blocks, in a precise order.
@@ -371,11 +370,11 @@ sequenceDiagram
    Organization_PDC->>Consent/Contract: Request profil consent of user
    Consent/Contract->>Organization_PDC: Provide profil consent of user
    Organization_PDC->>Organization_PDC: Attest authorization to export trace to WALRUC
-   Organization_PDC->>WALRUC_PDC: Export the trace to WALRUC PDC
-   WALRUC_PDC->>WALRUC: Export the trace
+   Organization_PDC->>WALRUC: Export the trace
    WALRUC->>WALRUC: Convert the trace into xAPI format
    WALRUC->>LRS: Provide trace
 ```
+PDC : Prometheus-X Dataspace Connector
 
 ## Configuration and deployment settings
 
@@ -431,9 +430,9 @@ paths: \
 
 ### Test plan
 
-*Testing strategy, tools and methods chosen, methods for acceptance criteria.*
+Once the architecture has been defined, precise endpoint mockups will be developed. This will enable interaction with sample data.
 
-Before putting V0 into the hands of users, we need to make sure that WALRUC works in a number of applications. We'll need to test it at least on our Becomino website which is equipped with Matomo and a LRS (Learning Locker). The tests will be conclusive if we see the matomo logs correctly converted into valid xAPI statements in the LRS.
+*To be detailed.*
 
 ### Unit tests
 
@@ -452,3 +451,17 @@ Before putting V0 into the hands of users, we need to make sure that WALRUC work
 ### UI test (where relevant)
 
 *Candidates for tools that can be used to implement the test cases: Selenium* 
+
+## Partners & roles
+Inokufu (BB leader): 
+- Organize workshops
+- Develop all the BB
+
+## Usage in the dataspace
+The WALRUC will be used in the service chain :
+- Personal learning record: Sharing LMS/Moodle Data for Visualization
+  
+![Enter image alt description](BB%20Service%20chains%20_%20LRS%20Learning%20Records%20store.pptx%20(3).png)
+PDC : Prometheus-X Dataspace Connector
+
+- Decentralized AI training: Training of trustworthy AI models
