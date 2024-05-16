@@ -459,7 +459,7 @@ Inokufu (BB leader):
 - Test the BB
 
 ## Usage in the dataspace
-The WALRUC will be used as a potential source of data for an LRS and thus be part of the service chains
+The WALRUC will be used as a potential source of data for a LRS and thus be part of the service chains:
 
 - Personal learning record: Sharing LMS/Moodle Data for Visualization
   
