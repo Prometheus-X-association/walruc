@@ -455,13 +455,15 @@ Once the architecture has been defined, precise endpoint mockups will be develop
 ## Partners & roles
 Inokufu (BB leader): 
 - Organize workshops
-- Develop all the BB
+- Develop the BB
+- Test the BB
 
 ## Usage in the dataspace
-The WALRUC will be used in the service chain :
+The WALRUC will be used as a potential source of data for an LRS and thus be part of the service chains
+
 - Personal learning record: Sharing LMS/Moodle Data for Visualization
   
 ![Enter image alt description](BB%20Service%20chains%20_%20LRS%20Learning%20Records%20store.pptx%20(3).png)
-PDC : Prometheus-X Dataspace Connector
+PDC: Prometheus-X Dataspace Connector
 
 - Decentralized AI training: Training of trustworthy AI models
