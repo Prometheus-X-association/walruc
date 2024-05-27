@@ -318,7 +318,7 @@ To convert the given Matomo log example into an xAPI statement, we'll map the mo
 
 ```
 
-Architecture
+## Architecture
 ```mermaid
 classDiagram
    WALRUC <|-- WALRUC_PDC
