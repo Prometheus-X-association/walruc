@@ -453,7 +453,7 @@ Once the architecture has been defined, precise endpoint mockups will be develop
 *Candidates for tools that can be used to implement the test cases: Selenium* 
 
 ## Partners & roles
-Inokufu (BB leader): 
+[Inokufu](https://www.inokufu.com/) (BB leader): 
 - Organize workshops
 - Develop the BB
 - Test the BB
