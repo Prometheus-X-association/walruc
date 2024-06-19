@@ -434,15 +434,15 @@ Once the architecture has been defined, precise endpoint mockups will be develop
 
 *To be detailed.*
 
-### Unit tests
+### Internal unit tests
 
-*Here specify the test cases for the components inside the BB.*  
+*Here specify the test cases for the units inside the BB.*  
 
 *Candidates for tools that can be used to implement the test cases: JUnit, Mockito, Pytest.*
 
-### Integration tests
+### Component-level testing
 
-*Here specify how to test the integration of the components inside the BB.*
+*Here specify how to test this component/BB as a whole. This is similar to how other BBs will use this component.*
 
 *Candidates for tools that can be used to implement the test cases: K6, Postman, stepci, Pact*
 
