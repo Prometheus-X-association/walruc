@@ -1,12 +1,12 @@
 # Web Analytics Learning Records Universal Connector (WALRUC) BB – Design Document
 
-Web Analytics Learning Records Universal Connector allows for the integration of web analytics data with a Learning Record Store (LRS) using the xAPI (Experience API) standard. It enables the conversion of analytics data, such as the data collected by Matomo, into an xAPI format that can be stored and tracked in a LRS.
+Web Analytics Learning Records Universal Connector allows for the integration of web analytics data with a Learning Record Store (LRS) using the xAPI (Experience API) DASES standard. It enables the conversion of analytics data, such as the data collected by Matomo, into an xAPI format that can be stored and tracked in a LRS.
 
 ## Technical usage scenarios & Features
 
 **Key functionalities:**
 
-- WALRUC converts web browsing analytics data into xAPI statement
+- WALRUC converts web browsing analytics data into xAPI DASES statement
 
 **Value-added:**
 
@@ -18,18 +18,18 @@ Web Analytics Learning Records Universal Connector allows for the integration of
 
 **Features**: 
 
-- WALRUC converts web browsing analytics into xAPI statement \
+- WALRUC converts web browsing analytics into xAPI DASES statement \
 	Path:  \
-		- "Matomo sends web browsing analytics data to WALRUC" \
-		- "WALRUC converts web browsing analytics into xAPI statement" \
-		- "WALRUC sends xAPI statement to LRS"
+		- "Matomo track web browsing analytics by data"\
+		- "WALRUC (plugin of Matomo) converts web browsing analytics into xAPI DASES statement" \
+		- "WALRUC sends xAPI DASES statement to LRS"
 
 
 ```mermaid
 
 flowchart LR
 
-A[Collect Matomo web records]--> B[Convert Matomo web records to xAPI format]--> C[Transfer database to an LRS]
+A[Collect Matomo web browsing analytics]--> B[Convert Matomo web browsing analytics into xAPI DASES format]--> C[Transfer data to an LRS]
 
 ```
 
@@ -37,13 +37,13 @@ A[Collect Matomo web records]--> B[Convert Matomo web records to xAPI format]-->
 
 A training organization can use WALRUC service to track and analyze the engagement and performance of their learners on their website. Here's an example of how this could work:
 
-1. The training organization integrates their website with a web analytics tool like Matomo, which tracks user interactions and engagement with the website.
+1. The training organization integrates their website with the web analytics tool Matomo, which tracks user interactions and engagement with the website.
 
 2. The organization also sets up a Learning Record Store (LRS) like Learning Locker.
 
-3. The WALRUC is implemented to connect the web analytics tool with the LRS. This allows the organization to convert the analytics data into an xAPI format that can be stored and tracked in the LRS.
+3. The WALRUC is implemented to connect the web analytics tool with the LRS. This allows the organization to convert the web  browsing analytics data into an xAPI DASES format that can be stored and tracked in the LRS.
 
-4. As learners interact with the website, data is collected and tracked in the LRS. This includes information like pages viewed, time spent on the site, and interactions with specific content.
+4. As learners interact with the website, data is collected and tracked in the LRS. This includes information like pages viewed, time spent on the site, ...
 
 5. The organization can use this data to track the performance of anonymized learners (or individual learners if they have their consent) and identify areas where they may need specific or additional support or resources.
 
@@ -54,7 +54,7 @@ A training organization can use WALRUC service to track and analyze the engageme
 | Requirement ID | Short description | BB input format | BB output format | Any other constraints | Verified by scenario | Requirement type |
 |---|---|---|---|---|---|---|
 | BB-REQ_ID__1 | WALRUC must request building block consent via the Prometheus-X Dataspace Connector | API call | API response |  |  |  |
-| BB-REQ_ID__1.1 | Individuals must consent to the use of their web analytics data as learning records in the WALRUC of the organization | API call | API response | If the answer is no, the data cannot be used, nor transferred into or from the WALRUC. If the answer is yer, the data can be used, and transferred into or from the WALRUC. | BB-SC-WALRUC-01 | DEP |
+| BB-REQ_ID__1.1 | Individuals must consent to the use and export of their web analytics data as learning records in the WALRUC plugin of the organization | API call | API response | If the answer is no, the data cannot be used, nor transferred into or from the WALRUC. If the answer is yer, the data can be used, and transferred into or from the WALRUC. | BB-SC-WALRUC-01 | DEP |
 | BB-REQ_ID__1.2 | Consent must be asked and verified in less than 30s | API call | API response |  | BB-SC-WALRUC-02 | PERF |
 | BB-REQ_ID__2 | WALRUC must request contracts from the building block consent via the Prometheus-X Dataspace Connector | API call | API response |  |  |  |
 | BB-REQ_ID__2.1 | The WALRUC must check with the contract manager through the Dataspace connector if a contract for the corresponding organization exists | API call | API response | If the answer is no, the data cannot be accessed, nor transferred into or from the PLRS. If the answer is yer, the data can be accessed, and transferred into or from the PLRS. | BB-SC-WALRUC-03 | DEP |
@@ -121,12 +121,6 @@ What?
 
 - Use the user's educational background
 
-**Connection with LRC:**
-
-Why?
-
-- convert matomo data format to xAPI format
-
 ## Relevant Standards
 
 ### Data Format Standards
@@ -145,7 +139,7 @@ Why?
 
 - The most critical personal data are in general in the actor part. According to xAPI, one can use first name, last name or email as the actor identifier. However, in our case we always recommend using uuid to identify actors. This way our learning records are pseudonymized by default. As this won’t always be the case with other organizations connected to the dataspace.
 
-- If shared datasets are not in xAPI format, LRC must be used to convert them to the correct format.
+- In order to perform the conversion, we will use the [xAPI DASES profile](https://github.com/gaia-x-dases/xapi-lms/tree/master), which has been specially designed for education.
 
 ### Mapping to Data Space Reference Architecture Models
 
@@ -154,9 +148,9 @@ Why?
 
 block-beta
 
-columns 6
+columns 4
 
-Matomo:1 WALRUC_PDC:1 WALRUC:1 WALRUC_PDC_:1 Organization_PDC:1 LRS:1
+Matomo:1 WALRUC:1 LRS:1 Organization_PDC:1
 
 classDef colorA fill:#D22FF7,color:#fff
 classDef colorEx fill:#01D1D1,color:#fff
@@ -164,8 +158,6 @@ classDef colorED fill:#6E7176,color:#fff
 class Matomo colorEx
 class LRS colorEx
 class WALRUC colorED
-class WALRUC_PDC colorA
-class WALRUC_PDC_ colorA
 class Organization_PDC colorA
 ```
 PDC : Prometheus-X Dataspace Connector
@@ -179,141 +171,163 @@ WALRUC uses [matomo data format](https://developer.matomo.org/guides/log-data) a
 Here is an example of Matomo logs for a user who has watched a given YouTube video on a course page of University A website.
 
 ```json
-
 {
-
-"date": "2024-03-11T14:17:32.814Z",
-
-"userId": "user_123456789",
-
-"actionType": "videoWatch",
-
-"actionDetails": {
-
-"pageTitle": "History Lecture Series",
-
-"pageURL": "https://universitya.com/history-lecture-series",
-
-"videoTitle": "What is History for?",
-
-"videoURL": "https://www.youtube.com/watch?v=hLE-5ElGlPM",
-
-"watchDuration": "300", // in seconds
-
-"action": "Watched",
-
-"videoId": "hLE-5ElGlPM"
-
-},
-
-"ipAddress": "192.168.1.1",
-
-"userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36",
-
-"siteId": "site_001",
-
-"visitorId": "visitor_789456123"
-
-}
+    "idSite": "1",
+    "idVisit": "68536",
+    "visitIp": "12.123.0.0",
+    "visitorId": "abcdefg",
+    "fingerprint": "hijklmnop",
+    "actionDetails": [
+      {
+        "type": "action",
+        "url": "https://www.inokufu.com/learning-platform/",
+        "pageTitle": "Learning platform | Inokufu",
+        "pageIdAction": "4715",
+        "idpageview": "iTnAa1",
+        "serverTimePretty": "4 juil. 2024 18:43:13",
+        "pageId": "182006",
+        "timeSpent": 24,
+        "timeSpentPretty": "24s",
+        "pageviewPosition": "2",
+        "title": "Learning platform | Inokufu",
+        "subtitle": "https://www.inokufu.com/learning-platform/",
+        "icon": "",
+        "iconSVG": "plugins/Morpheus/images/action.svg",
+        "timestamp": 1720118593
+      }
+    ],
+    "goalConversions": 0,
+    "siteCurrency": "EUR",
+    "siteCurrencySymbol": "€",
+    "serverDate": "2024-07-04",
+    "visitServerHour": "16",
+    "lastActionTimestamp": 1720111417,
+    "lastActionDateTime": "2024-07-04 16:43:37",
+    "siteName": "www.inokufu.com",
+    "serverTimestamp": 1720111417,
+    "firstActionTimestamp": 1720111385,
+    "serverTimePretty": "18:43:37",
+    "serverDatePretty": "Jeudi 4 juillet 2024",
+    "serverDatePrettyFirstAction": "Jeudi 4 juillet 2024",
+    "serverTimePrettyFirstAction": "18:43:05",
+    "userId": null,
+    "visitorType": "new",
+    "visitorTypeIcon": null,
+    "visitConverted": "0",
+    "visitConvertedIcon": null,
+    "visitCount": "1",
+    "visitEcommerceStatus": "none",
+    "visitEcommerceStatusIcon": null,
+    "daysSinceFirstVisit": 0,
+    "secondsSinceFirstVisit": "0",
+    "daysSinceLastEcommerceOrder": 0,
+    "secondsSinceLastEcommerceOrder": null,
+    "visitDuration": "33",
+    "visitDurationPretty": "33s",
+    "searches": "0",
+    "actions": "3",
+    "interactions": "3",
+    "referrerType": "search",
+    "referrerTypeName": "Moteurs de recherche",
+    "referrerName": "Google",
+    "referrerKeyword": "Mot clef indéfini",
+    "referrerKeywordPosition": null,
+    "referrerUrl": "https://www.google.com/",
+    "referrerSearchEngineUrl": "http://google.com",
+    "referrerSearchEngineIcon": "plugins/Morpheus/icons/dist/searchEngines/google.com.png",
+    "referrerSocialNetworkUrl": null,
+    "referrerSocialNetworkIcon": null,
+    "languageCode": "fr-fr",
+    "language": "Code langue fr-fr",
+    "deviceType": "Bureau",
+    "deviceTypeIcon": "plugins/Morpheus/icons/dist/devices/desktop.png",
+    "deviceBrand": "Apple",
+    "deviceModel": "Générique Bureau",
+    "operatingSystem": "Mac 10.15",
+    "operatingSystemName": "Mac",
+    "operatingSystemIcon": "plugins/Morpheus/icons/dist/os/MAC.png",
+    "operatingSystemCode": "MAC",
+    "operatingSystemVersion": "10.15",
+    "browserFamily": "Blink",
+    "browserFamilyDescription": "Blink (Chrome, Opera)",
+    "browser": "Chrome 126.0",
+    "browserName": "Chrome",
+    "browserIcon": "plugins/Morpheus/icons/dist/browsers/CH.png",
+    "browserCode": "CH",
+    "browserVersion": "126.0",
+    "events": "0",
+    "continent": "Europe",
+    "continentCode": "eur",
+    "country": "France",
+    "countryCode": "fr",
+    "countryFlag": "plugins/Morpheus/icons/dist/flags/fr.png",
+    "region": "Île-de-France",
+    "regionCode": "IDF",
+    "city": "Bezons",
+    "location": "Bezons, Île-de-France, France",
+    "latitude": "48.924000",
+    "longitude": "2.213000",
+    "visitLocalTime": "18:43:05",
+    "visitLocalHour": "18",
+    "daysSinceLastVisit": 0,
+    "secondsSinceLastVisit": "0",
+    "resolution": "1440x900",
+    "plugins": "cookie, pdf",
+    "pluginsIcons": [
+      {
+        "pluginIcon": "plugins/Morpheus/icons/dist/plugins/cookie.png",
+        "pluginName": "cookie"
+      },
+      {
+        "pluginIcon": "plugins/Morpheus/icons/dist/plugins/pdf.png",
+        "pluginName": "pdf"
+      }
+    ]
+  }
 
 ```
 
 **Output in xAPI format**
 
-To convert the given Matomo log example into an xAPI statement, we'll map the most relevant information from the log to the appropriate xAPI fields. This involves identifying the actor (the user), the verb (the action taken), and the object (the video watched), as well as including relevant context where applicable.
+To convert the given Matomo log example into an xAPI DASES statement, we'll map the most relevant information from the log to the appropriate xAPI fields. This involves identifying the actor (the user), the verb (the action taken), and the object (the website ccessed), as well as including relevant context where applicable.
 
 ```json
 
 {
-
-"actor": {
-
-"objectType": "Agent",
-
-"account": {
-
-"homePage": "https://universitya.com/users",
-
-"name": "user_123456789"
-
-}
-
-},
-
-"verb": {
-
-"id": "http://activitystrea.ms/schema/1.0/watch",
-
-"display": {
-
-"en-US": "watched"
-
-}
-
-},
-
-"object": {
-
-"id": "https://www.youtube.com/watch?v=hLE-5ElGlPM",
-
-"definition": {
-
-"name": {
-
-"en-US": "What is History for?"
-
-},
-
-"description": {
-
-"en-US": "A video lecture from the History Lecture Series hosted on YouTube."
-
-},
-
-"type": "http://activitystrea.ms/schema/1.0/video"
-
-},
-
-"objectType": "Activity"
-
-},
-
-"context": {
-
-"platform": "Web",
-
-"language": "en-US",
-
-"extensions": {
-
-"http://id.tincanapi.com/extension/ip-address": "192.168.1.1",
-
-"http://id.tincanapi.com/extension/browser-info": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36",
-
-"http://id.tincanapi.com/extension/page-url": "https://universitya.com/history-lecture-series",
-
-"http://id.tincanapi.com/extension/duration": "PT300S"
-
-}
-
-},
-
-"timestamp": "2024-03-11T14:17:32.814Z",
-
-"authority": {
-
-"objectType": "Agent",
-
-"name": "University A LOMCT",
-
-"mbox": "mailto:contact@universitya.com"
-
-},
-
-"stored": "2024-03-11T14:17:43.686Z",
-
-"version": "1.0.0"
-
+   "actor": {
+      "account": {
+         "name": "abcdefg",
+         "homePage": "https://www.inokufu.com/"
+      }
+   },
+   "verb": {
+      "id": "https://w3id.org/xapi/netc/verbs/accessed"
+   },
+   "object": {
+      "objectType": "Activity",
+      "id": "https://www.inokufu.com/learning-platform/",
+      "definition": {
+         "type": "https://w3id.org/xapi/acrossx/activities/webpage",
+         "name": {
+            "en": "Learning platform | Inokufu"
+         },
+         "extensions": {
+            "https://w3id.org/xapi/acrossx/extensions/type": "course_list"
+         }
+      }
+   },
+   "context": {
+      "contextActivities": {
+         "category": [
+            {
+               "id": "https://w3id.org/xapi/lms",
+               "definition": {
+                  "type": "http://adlnet.gov/expapi/activities/profile"
+               }
+            }
+         ]
+      }
+   }
 }
 
 ```
@@ -321,15 +335,20 @@ To convert the given Matomo log example into an xAPI statement, we'll map the mo
 ## Architecture
 ```mermaid
 classDiagram
-   WALRUC <|-- WALRUC_PDC
-   WALRUC_PDC <|-- WALRUC
-   WALRUC_PDC <|-- CC_PDC
-   CC_PDC <|-- WALRUC_PDC
+   WALRUC <|-- Matomo
+   LRS <|-- WALRUC
+   LRS <|-- LRS_PDC
+   LRS_PDC <|-- LRS
+   LRS_PDC <|-- CC_PDC
+   CC_PDC <|-- LRS_PDC
    CC_PDC <|-- Consent_Contracts
    Consent_Contracts <|-- CC_PDC
    WALRUC: convert()
    WALRUC: send_lrs()
-   class WALRUC_PDC{
+   Matomo: track_statement()
+   Matomo: send_walruc()
+   LRS: send_database()
+   class LRS_PDC{
      identity()
      catalog()
      contract()
@@ -358,20 +377,8 @@ WALRUC building blocks communicate with other building blocks, in a precise orde
 sequenceDiagram
    actor User as User
    User->>Matomo: Made a web browsing trace
-   Matomo->>Organization_PDC: Requests to send trace to LRS organization
-   Organization_PDC->>Data_Intermediary: Request for information on identity, consent and contract
-   Data_Intermediary->>Identity: Request for identity information
-   Identity->>Data_Intermediary: Provide identity information
-   Data_Intermediary->>Consent: Request for consent information
-   Consent->>Data_Intermediary: Provide consent information
-   Data_Intermediary->>Contract: Request for contract information
-   Contract->>Data_Intermediary: Provide contract information
-   Data_Intermediary->>Organization_PDC: Identity, consent and contract sent and approved
-   Organization_PDC->>Consent/Contract: Request profil consent of user
-   Consent/Contract->>Organization_PDC: Provide profil consent of user
-   Organization_PDC->>Organization_PDC: Attest authorization to export trace to WALRUC
-   Organization_PDC->>WALRUC: Export the trace
-   WALRUC->>WALRUC: Convert the trace into xAPI format
+   Matomo->>WALRUC: Send the trace
+   WALRUC->>WALRUC: Convert the trace into xAPI DASES format
    WALRUC->>LRS: Provide trace
 ```
 PDC : Prometheus-X Dataspace Connector
@@ -390,6 +397,40 @@ PDC : Prometheus-X Dataspace Connector
 
 - Add LRS url and credential into WALRUC settings
 
+
+### Error Scenarios Defined
+
+The idea of the risk table is to define the probable causes of failure in order to estimate the probability of encountering this failure, to evaluate its secondary effects and therefore to plan preventive or corrective actions.
+
+
+We will assign 3 scores on a scale of 1 to 10 to potential failures:
+
+- **Detection** (risk of non-detection)
+
+- **Occurrence** (probable occurrence, frequency of occurrence)
+
+- **Severity of Effect** (consequences for the customer)
+
+
+
+Criticality is calculated as follows:
+
+`criticality = detection x occurrence x severity`
+
+
+
+If criticality is greater than 10, then preventive action must be taken. If not, no action is required.
+  
+
+| ID  | Function involved                                                                                     | Description of risk                                             | Effect of failure                                                                                       | Cause of failure                                                                                      | Evaluation - Detection | Evaluation - Occurrence | Evaluation - Severity | Evaluation - Criticality | Preventive actions                                                                                                                                                                    |
+| --- | ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- | ---------------------- | ----------------------- | --------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | export web analytics data from Matomo to LRS| Data may be lost during migration| The organization doesn't receive the complete statements in its LRS| Incorrect connection between Matomo-Walruc- LRS| 2| 2| 9| 36|Set up recurring connection tests | 
+| 2   | export web analytics data from Matomo to LRS| The same data can be exported several times|Export several times| Duplicate dat|1|2|4| 36|Program ignore if already in LRS|
+| 3   | export web analytics data from Matomo to LRS                | The LRS doesn't have enough storage space for all statements   | No more statement export                        | Too little storage               | 1       | 3                    | 9          | 24       | | Test the service's scalability    
+| 4   | export web analytics data from Matomo to LRS                | The system may require downtime for large exports              | Disrupting normal operations                    | Low-performance servers         | 1       |  3                    | 4          | 12       | Test the service's scalability    |
+| 5   | export web analytics data from Matomo to LRS                | The organization may decide to change its LRS                  | Reconnecting Matomo-plugin and the new LRS       | Change of LRS/LMS              | 1        | 2                    | 1          | 2        |                             | 
+| 6   | Convert Matomo trace into xAPI DASES format                 | The Matomo trace settings do not match the requested settings. | Impossible to convert                           | Not same settings              | 2        | 3                    | 7          | 42       | Set up a parameter sheet          
+
 ## Third Party Components & Licenses
 
 **External components and licenses :**
@@ -398,11 +439,6 @@ PDC : Prometheus-X Dataspace Connector
 
 - Pydantic, [open source](https://github.com/pydantic/pydantic), [license MIT](https://github.com/pydantic/pydantic?tab=MIT-1-ov-file#readme)
 
-## Implementation Details
-
-*This is optional: remove this heading if not needed.*
-
-*You can add details about implementation plans and lower-level design here.*
 
 ## OpenAPI Specification
 
@@ -426,31 +462,44 @@ paths: \
 
 ## Test specification
 
-*Test definitions and testing environment should be availaible, and the tests should be repeatable.*
+The Web Analytics Learning Record Universal Connector tests ensure that :
+- functionality is efficient
+- potential risks are under control
+- users are satisfied
 
 ### Test plan
 
-Once the architecture has been defined, precise endpoint mockups will be developed. This will enable interaction with sample data.
+The Walruc testing strategy will focus on ensuring the accuracy, reliability and performance of its functionality. We will use a combination of unit testing, integration testing and user interface testing. The test environment will reproduce conditions similar to those in production in order to accurately validate BB behavior. Acceptance criteria will be defined on the basis of user stories, functional requirements and performance criteria.
 
-*To be detailed.*
+**Methodology**
+We will run manual and automatic tests.
 
-### Internal unit tests
+Using the personas, user stories, userflow and dataflow from the Wiki LOM use case, we established several test scenarios.
+Before putting V0 into the hands of users, we need to make sure that WALRUC works in a number of applications. We will need to test it at least on the "becomino" application linked to the LRS Learning Locker. The tests will be conclusive if we see the traces appear on Learning Locker.
 
-*Here specify the test cases for the units inside the BB.*  
+**Manual test**
 
-*Candidates for tools that can be used to implement the test cases: JUnit, Mockito, Pytest.*
+For your information, the tests will be extended in the future.
 
-### Component-level testing
+Persona 1 : kylian (Learner)
 
-*Here specify how to test this component/BB as a whole. This is similar to how other BBs will use this component.*
+Persona 2 : mmedupont (LRS admin)
 
-*Candidates for tools that can be used to implement the test cases: K6, Postman, stepci, Pact*
+Scenario 1 :
+On October 17, 2024, Kylian visits page https://becomino.com/home at 2:30pm for 4 seconds, then page https://becomino.com/board/valorisation-batiment-1701336809956x653082361463832600 for 8 seconds, then page https://becomino.com/category/economie-circulaire for 36 seconds.
+The WALRUC extension is connected to mmedupont's LRS.
 
-*An example tutorial is available [here](https://github.com/ftsrg-edu/swsv-labs/wiki/2b-Integration-testing).*
+Validation : the scenario is validated if it appears in mmedupont's LRS under 3 traces :
+- Kylian visited https://becomino.com/home on October 17, 2024 at 2:30pm for 4 seconds
+- Kylian visited https://becomino.com/board/valorisation-batiment-1701336809956x653082361463832600 on October 17, 2024 for 8 seconds
+- Kylian visited https://becomino.com/category/economie-circulaire on October 17, 2024 for 36 seconds
+
 
 ### UI test (where relevant)
 
-*Candidates for tools that can be used to implement the test cases: Selenium* 
+The only UI/UX that will be visible is the parameter side of the Matomo plugin.
+![matomo parameters (2)](https://github.com/Prometheus-X-association/walruc/assets/129832540/fae4a560-111c-4b7c-b36f-066d40d5b0dc)
+
 
 ## Partners & roles
 [Inokufu](https://www.inokufu.com/) (BB leader): 
