@@ -178,6 +178,23 @@ Here is an example of Matomo logs for a user who has watched a given YouTube vid
     "visitorId": "abcdefg",
     "fingerprint": "hijklmnop",
     "actionDetails": [
+{
+        "type": "action",
+        "url": "https://www.inokufu.com/",
+        "pageTitle": "Inokufu | Better data for better learning",
+        "pageIdAction": "2",
+        "idpageview": "CWrLQ5",
+        "serverTimePretty": "4 juil. 2024 18:43:05",
+        "pageId": "182005",
+        "timeSpent": 8,
+        "timeSpentPretty": "8s",
+        "pageviewPosition": "1",
+        "title": "Inokufu | Better data for better learning",
+        "subtitle": "https://www.inokufu.com/",
+        "icon": "",
+        "iconSVG": "plugins/Morpheus/images/action.svg",
+        "timestamp": 1720118585
+      },
       {
         "type": "action",
         "url": "https://www.inokufu.com/learning-platform/",
@@ -194,6 +211,23 @@ Here is an example of Matomo logs for a user who has watched a given YouTube vid
         "icon": "",
         "iconSVG": "plugins/Morpheus/images/action.svg",
         "timestamp": 1720118593
+      },
+      {
+        "type": "action",
+        "url": "https://www.inokufu.com/search-engine/",
+        "pageTitle": "Search Engine | Inokufu",
+        "pageIdAction": "4710",
+        "idpageview": "2vf6wq",
+        "serverTimePretty": "4 juil. 2024 18:43:37",
+        "pageId": "182007",
+        "timeSpent": 0,
+        "timeSpentPretty": "0s",
+        "pageviewPosition": "3",
+        "title": "Search Engine | Inokufu",
+        "subtitle": "https://www.inokufu.com/search-engine/",
+        "icon": "",
+        "iconSVG": "plugins/Morpheus/images/action.svg",
+        "timestamp": 1720118617
       }
     ],
     "goalConversions": 0,
@@ -289,7 +323,54 @@ Here is an example of Matomo logs for a user who has watched a given YouTube vid
 
 **Output in xAPI format**
 
-To convert the given Matomo log example into an xAPI DASES statement, we'll map the most relevant information from the log to the appropriate xAPI fields. This involves identifying the actor (the user), the verb (the action taken), and the object (the website ccessed), as well as including relevant context where applicable.
+To convert the given Matomo log example into an xAPI DASES statement, we will map the most relevant information from the log to the appropriate xAPI fields. This involves identifying the actor (the user), the verb (the action taken), and the object (the website ccessed), as well as including relevant context where applicable.
+For example, the matomo statement above breaks down into 3 xAPI DASES statements:
+
+```json
+
+{
+   "actor": {
+      "account": {
+         "name": "abcdefg",
+         "homePage": "https://www.inokufu.com/"
+      }
+   },
+   "verb": {
+      "id": "https://w3id.org/xapi/netc/verbs/accessed"
+   },
+   "object": {
+      "objectType": "Activity",
+      "id": "https://www.inokufu.com/",
+      "definition": {
+         "type": "https://w3id.org/xapi/acrossx/activities/webpage",
+         "name": {
+            "en": "Inokufu | Better data for better learning"
+         },
+         "extensions": {
+            "https://w3id.org/xapi/acrossx/extensions/type": "website"
+         }
+      }
+   },
+   "context": {
+      "contextActivities": {
+         "category": [
+            {
+               "id": "homepage",
+               "definition": {
+                  "type": "http://adlnet.gov/expapi/activities/profile"
+               }
+            }
+         ]
+      }
+         "extensions": {
+            "http://id.tincanapi.com/extension/duration": "8s",
+            "http://id.tincanapi.com/extension/ip-address": "12.123.0.0",
+            "http://id.tincanapi.com/extension/browser-info": "Chrome 126.0"
+         }
+   }
+   "timestamp": "2024-07-04T18:43:05.887Z"
+}
+```
 
 ```json
 
@@ -312,7 +393,7 @@ To convert the given Matomo log example into an xAPI DASES statement, we'll map 
             "en": "Learning platform | Inokufu"
          },
          "extensions": {
-            "https://w3id.org/xapi/acrossx/extensions/type": "course_list"
+            "https://w3id.org/xapi/acrossx/extensions/type": "website"
          }
       }
    },
@@ -327,10 +408,62 @@ To convert the given Matomo log example into an xAPI DASES statement, we'll map 
             }
          ]
       }
+         "extensions": {
+            "http://schema.prometheus-x.org/extension/duration": "24s",
+            "http://id.tincanapi.com/extension/ip-address": "12.123.0.0",
+            "http://id.tincanapi.com/extension/browser-info": "Chrome 126.0"
+         }
    }
+   "timestamp": "2024-07-04T18:43:13.887Z"
 }
-
 ```
+
+```json
+
+{
+   "actor": {
+      "account": {
+         "name": "abcdefg",
+         "homePage": "https://www.inokufu.com/"
+      }
+   },
+   "verb": {
+      "id": "https://w3id.org/xapi/netc/verbs/accessed"
+   },
+   "object": {
+      "objectType": "Activity",
+      "id": "https://www.inokufu.com/search-engine/",
+      "definition": {
+         "type": "https://w3id.org/xapi/acrossx/activities/webpage",
+         "name": {
+            "en": "Search Engin | Inokufu"
+         },
+         "extensions": {
+            "https://w3id.org/xapi/acrossx/extensions/type": "website"
+         }
+      }
+   },
+   "context": {
+      "contextActivities": {
+         "category": [
+            {
+               "id": "https://w3id.org/xapi/lms",
+               "definition": {
+                  "type": "http://adlnet.gov/expapi/activities/profile"
+               }
+            }
+         ]
+      }
+         "extensions": {
+            "http://schema.prometheus-x.org/extension/duration": "0s",
+            "http://id.tincanapi.com/extension/ip-address": "12.123.0.0",
+            "http://id.tincanapi.com/extension/browser-info": "Chrome 126.0"
+         }
+   }
+   "timestamp": "2024-07-04T18:43:37.887Z"
+}
+```
+
 
 ## Architecture
 ```mermaid
@@ -494,6 +627,143 @@ Validation : the scenario is validated if it appears in mmedupont's LRS under 3 
 - Kylian visited https://becomino.com/board/valorisation-batiment-1701336809956x653082361463832600 on October 17, 2024 for 8 seconds
 - Kylian visited https://becomino.com/category/economie-circulaire on October 17, 2024 for 36 seconds
 
+Statements 
+  ```json
+{
+   "actor": {
+      "account": {
+         "name": "kylian",
+         "homePage": "https://www.becomino.com/"
+      }
+   },
+   "verb": {
+      "id": "https://w3id.org/xapi/netc/verbs/accessed"
+   },
+   "object": {
+      "objectType": "Activity",
+      "id": "https://becomino.com/home",
+      "definition": {
+         "type": "https://w3id.org/xapi/acrossx/activities/webpage",
+         "name": {
+            "en": "Home"
+         },
+         "extensions": {
+            "https://w3id.org/xapi/acrossx/extensions/type": "course"
+         }
+      }
+   },
+   "context": {
+      "contextActivities": {
+         "category": [
+            {
+               "id": "https://w3id.org/xapi/lms",
+               "definition": {
+                  "type": "http://adlnet.gov/expapi/activities/course_list"
+               }
+            }
+         ]
+      }
+         "extensions": {
+            "http://schema.prometheus-x.org/extension/duration": "4s",
+            "http://id.tincanapi.com/extension/ip-address": "12.123.0.0",
+            "http://id.tincanapi.com/extension/browser-info": "Chrome 126.0"
+         }
+   }
+   "timestamp": "2024-10-17T14:30:0.887Z"
+}
+```
+
+```json
+
+{
+   "actor": {
+      "account": {
+         "name": "kylian",
+         "homePage": "https://www.becomino.com/"
+      }
+   },
+   "verb": {
+      "id": "https://w3id.org/xapi/netc/verbs/accessed"
+   },
+   "object": {
+      "objectType": "Activity",
+      "id": "https://becomino.com/board/valorisation-batiment-1701336809956x653082361463832600",
+      "definition": {
+         "type": "https://w3id.org/xapi/acrossx/activities/webpage",
+         "name": {
+            "en": "Valorisation batiment"
+         },
+         "extensions": {
+            "https://w3id.org/xapi/acrossx/extensions/type": "course"
+         }
+      }
+   },
+   "context": {
+      "contextActivities": {
+         "category": [
+            {
+               "id": "https://w3id.org/xapi/lms",
+               "definition": {
+                  "type": "http://adlnet.gov/expapi/activities/course"
+               }
+            }
+         ]
+      }
+         "extensions": {
+            "http://schema.prometheus-x.org/extension/duration": "8s",
+            "http://id.tincanapi.com/extension/ip-address": "12.123.0.0",
+            "http://id.tincanapi.com/extension/browser-info": "Chrome 126.0"
+         }
+   }
+   "timestamp": "2024-10-17T14:30:04.887Z"
+}
+```
+
+```json
+
+{
+   "actor": {
+      "account": {
+         "name": "kylian",
+         "homePage": "https://www.becomino.com/"
+      }
+   },
+   "verb": {
+      "id": "https://w3id.org/xapi/netc/verbs/accessed"
+   },
+   "object": {
+      "objectType": "Activity",
+      "id": "https://becomino.com/category/economie-circulaire",
+      "definition": {
+         "type": "https://w3id.org/xapi/acrossx/activities/webpage",
+         "name": {
+            "en": "Economie Circulaire"
+         },
+         "extensions": {
+            "https://w3id.org/xapi/acrossx/extensions/type": "course"
+         }
+      }
+   },
+   "context": {
+      "contextActivities": {
+         "category": [
+            {
+               "id": "https://w3id.org/xapi/lms",
+               "definition": {
+                  "type": "http://adlnet.gov/expapi/activities/course"
+               }
+            }
+         ]
+      }
+         "extensions": {
+            "http://schema.prometheus-x.org/extension/duration": "36s",
+            "http://id.tincanapi.com/extension/ip-address": "12.123.0.0",
+            "http://id.tincanapi.com/extension/browser-info": "Chrome 126.0"
+         }
+   }
+   "timestamp": "2024-10-17T14:30:12.887Z"
+}
+```
 
 ### UI test (where relevant)
 
