@@ -364,7 +364,6 @@ For example, the matomo statement above breaks down into 3 xAPI DASES statements
       }
          "extensions": {
             "http://id.tincanapi.com/extension/duration": "8s",
-            "http://id.tincanapi.com/extension/ip-address": "12.123.0.0",
             "http://id.tincanapi.com/extension/browser-info": "Chrome 126.0"
          }
    }
@@ -409,8 +408,7 @@ For example, the matomo statement above breaks down into 3 xAPI DASES statements
          ]
       }
          "extensions": {
-            "http://schema.prometheus-x.org/extension/duration": "24s",
-            "http://id.tincanapi.com/extension/ip-address": "12.123.0.0",
+            "http://id.tincanapi.com/extension/duration": "24s",
             "http://id.tincanapi.com/extension/browser-info": "Chrome 126.0"
          }
    }
@@ -455,8 +453,7 @@ For example, the matomo statement above breaks down into 3 xAPI DASES statements
          ]
       }
          "extensions": {
-            "http://schema.prometheus-x.org/extension/duration": "0s",
-            "http://id.tincanapi.com/extension/ip-address": "12.123.0.0",
+            "http://id.tincanapi.com/extension/duration": "0s",
             "http://id.tincanapi.com/extension/browser-info": "Chrome 126.0"
          }
    }
@@ -664,8 +661,7 @@ Statements
          ]
       }
          "extensions": {
-            "http://schema.prometheus-x.org/extension/duration": "4s",
-            "http://id.tincanapi.com/extension/ip-address": "12.123.0.0",
+            "http://id.tincanapi.com/extension/duration": "4s",
             "http://id.tincanapi.com/extension/browser-info": "Chrome 126.0"
          }
    }
@@ -710,8 +706,7 @@ Statements
          ]
       }
          "extensions": {
-            "http://schema.prometheus-x.org/extension/duration": "8s",
-            "http://id.tincanapi.com/extension/ip-address": "12.123.0.0",
+            "http://id.tincanapi.com/extension/duration": "8s",
             "http://id.tincanapi.com/extension/browser-info": "Chrome 126.0"
          }
    }
@@ -756,8 +751,7 @@ Statements
          ]
       }
          "extensions": {
-            "http://schema.prometheus-x.org/extension/duration": "36s",
-            "http://id.tincanapi.com/extension/ip-address": "12.123.0.0",
+            "http://id.tincanapi.com/extension/duration": "36s",
             "http://id.tincanapi.com/extension/browser-info": "Chrome 126.0"
          }
    }
