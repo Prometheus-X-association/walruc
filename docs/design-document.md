@@ -168,7 +168,7 @@ PDC : Prometheus-X Dataspace Connector
 
 WALRUC uses [matomo data format](https://developer.matomo.org/guides/log-data) as input data format.
 
-Here is an example of Matomo logs for a user who has watched a given YouTube video on a course page of University A website.
+Here is an example of Matomo logs for a user who visited 3 pages on www.inokufu.com
 
 ```json
 {
