@@ -590,6 +590,22 @@ paths: \
 
 ```
 
+## Codebase : Mockup version
+To get a functional understanding of this mockup and see some sample traces, go here : https://github.com/Prometheus-X-association/walruc/blob/main/docs/Walruc%20-%20Mock%20up%20.pdf
+
+To have a write access to the traces make a request on this mockup document : https://docs.google.com/document/d/1DwXxVtfRkWuW_jwCQBVjJ2eYNImKd3HI8f0f4iQYyi8/edit
+To have a read access to the traces make a request on this mockup document: https://docs.google.com/document/d/12ZXHjXoZ5jNAhmsdc0IPs6e-oJAG6zCzdDe5awPe1_I/edit
+
+### PUT
+description: Store a single statement as a single member of a set.
+
+### POST
+description: "Store a set of statements (or a single statement as a single member of a set).
+
+### GET
+description: Read a single xAPI Statement or multiple xAPI Statements.
+
+
 ## Test specification
 
 The Web Analytics Learning Record Universal Connector tests ensure that :
