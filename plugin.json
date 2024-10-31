@@ -1,0 +1,26 @@
+{
+  "name": "Walruc",
+  "description": "Web Analytics Learning Records Universal Connector",
+  "version": "0.1.0",
+  "theme": false,
+  "require": {
+    "matomo": ">=5.2.0-b5,<6.0.0-b1",
+    "php": ">=8.2"
+  },
+  "authors": [
+    {
+      "name": "Inokufu",
+      "homepage": "https://www.inokufu.com"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/Prometheus-X-association/walruc/issues",
+    "source": "https://github.com/Prometheus-X-association/walruc",
+    "docs": "https://github.com/Prometheus-X-association/walruc/tree/main/docs"
+  },
+  "homepage": "https://github.com/Prometheus-X-association/walruc",
+  "license": "GPL v3+",
+  "keywords": [
+    "walruc"
+  ]
+}
