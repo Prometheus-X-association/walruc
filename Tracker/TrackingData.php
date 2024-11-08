@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Piwik\Plugins\Walruc\Tracker;
 
+use InvalidArgumentException;
+
 /**
  * Data Transfer Object for Matomo tracking data
  */
@@ -38,6 +40,25 @@ class TrackingData
         ?int $timeSpent,
         array $extraData = [],
     ) {
+        if ($timestamp !== null && $timestamp < 0) {
+            throw new InvalidArgumentException('Timestamp must be positive');
+        }
+
+        if ($timeSpent !== null && $timeSpent < 0) {
+            throw new InvalidArgumentException('Time spent must be positive');
+        }
+
+        if ($visitIp !== null && !filter_var($visitIp, FILTER_VALIDATE_IP)) {
+            throw new InvalidArgumentException('Invalid IP address format');
+        }
+
+        if ($url !== null && !filter_var($url, FILTER_VALIDATE_URL)) {
+            $parts = parse_url($url);
+            if ($parts === false || !isset($parts['host'])) {
+                throw new InvalidArgumentException('Invalid URL format');
+            }
+        }
+
         $this->siteName = $siteName;
         $this->visitIp = $visitIp;
         $this->userId = $userId;
