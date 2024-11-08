@@ -12,4 +12,9 @@ class Walruc extends Plugin
     {
         return true;
     }
+
+    public function requiresInternetConnection()
+    {
+        return true;
+    }
 }
