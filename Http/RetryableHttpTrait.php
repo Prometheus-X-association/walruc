@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Piwik\Plugins\Walruc\Traits;
+namespace Piwik\Plugins\Walruc\Http;
 
 use Closure;
 use Exception;
 use Piwik\Log\LoggerInterface;
+use Piwik\Plugins\Walruc\Exceptions\HttpException;
 
 trait RetryableHttpTrait
 {
@@ -22,7 +23,7 @@ trait RetryableHttpTrait
      *
      * @return mixed                    The result of the operation if it succeeds.
      *
-     * @throws Exception                Throws the last exception encountered if all attempts fail.
+     * @throws HttpException            Throws the last exception encountered if all attempts fail.
      */
     private function executeWithRetry(
         Closure $operation,

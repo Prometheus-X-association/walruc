@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use Piwik\DI;
+use Piwik\Plugins\Walruc\Http\HttpClient;
+use Piwik\Plugins\Walruc\Http\HttpClientInterface;
 use Piwik\Plugins\Walruc\LearningRecordConverter\ConverterApi;
 use Piwik\Plugins\Walruc\LearningRecordConverter\ConverterInterface;
 use Piwik\Plugins\Walruc\LearningRecordStore\StoreApi;
@@ -12,4 +14,5 @@ return [
     // Dependencies injection
     ConverterInterface::class => DI::autowire(ConverterApi::class),
     StoreInterface::class => DI::autowire(StoreApi::class),
+    HttpClientInterface::class => DI::autowire(HttpClient::class),
 ];
