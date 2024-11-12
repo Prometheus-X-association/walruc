@@ -7,14 +7,11 @@ namespace Piwik\Plugins\Walruc\LearningRecordStore;
 use Piwik\Log\LoggerInterface;
 use Piwik\Plugins\Walruc\Exceptions\StorageException;
 use Piwik\Plugins\Walruc\Http\HttpClientInterface;
-use Piwik\Plugins\Walruc\Http\RetryableHttpTrait;
 use Piwik\Plugins\Walruc\LearningRecordConverter\ConverterResponse;
 use Piwik\Plugins\Walruc\SystemSettings;
 
 class StoreApi implements StoreInterface
 {
-    use RetryableHttpTrait;
-
     private LoggerInterface $logger;
     private SystemSettings $settings;
     private HttpClientInterface $httpClient;

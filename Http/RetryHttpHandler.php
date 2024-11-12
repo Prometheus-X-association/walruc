@@ -9,7 +9,7 @@ use Exception;
 use Piwik\Log\LoggerInterface;
 use Piwik\Plugins\Walruc\Exceptions\HttpException;
 
-trait RetryableHttpTrait
+class RetryHttpHandler implements RetryHandlerInterface
 {
     /**
      * Executes a given operation with retry logic, applying an exponentially increasing delay between attempts.
@@ -25,7 +25,7 @@ trait RetryableHttpTrait
      *
      * @throws HttpException            Throws the last exception encountered if all attempts fail.
      */
-    private function executeWithRetry(
+    public function executeWithRetry(
         Closure $operation,
         LoggerInterface $logger,
         string $operationName,

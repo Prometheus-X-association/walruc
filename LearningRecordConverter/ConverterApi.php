@@ -9,13 +9,10 @@ use Piwik\Log\LoggerInterface;
 use Piwik\Plugins\Walruc\Exceptions\ConversionException;
 use Piwik\Plugins\Walruc\Exceptions\HttpException;
 use Piwik\Plugins\Walruc\Http\HttpClientInterface;
-use Piwik\Plugins\Walruc\Http\RetryableHttpTrait;
 use Piwik\Plugins\Walruc\Tracker\TrackingData;
 
 class ConverterApi implements ConverterInterface
 {
-    use RetryableHttpTrait;
-
     private const INPUT_FORMAT = 'matomo';
     private const ENDPOINT_CONFIG = 'lrcEndpoint';
 
