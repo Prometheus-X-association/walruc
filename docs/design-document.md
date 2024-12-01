@@ -54,14 +54,14 @@ A training organization can use WALRUC service to track and analyze the engageme
 | Requirement ID | Short description | BB input format | BB output format | Any other constraints | Verified by scenario | Requirement type |
 |---|---|---|---|---|---|---|
 | BB-REQ_ID__1 | WALRUC must request building block consent via the Prometheus-X Dataspace Connector | API call | API response |  |  |  |
-| BB-REQ_ID__1.1 | Individuals must consent to the use and export of their web analytics data as learning records in the WALRUC plugin of the organization | API call | API response | If the answer is no, the data cannot be used, nor transferred into or from the WALRUC. If the answer is yer, the data can be used, and transferred into or from the WALRUC. | BB-SC-WALRUC-01 | DEP |
+| BB-REQ_ID__1.1 | Individuals must consent to the use and export of their web analytics data as learning records in the WALRUC plugin of the organization | API call | API response | If the answer is no, the data cannot be used, nor transferred into or from the WALRUC. If the answer is yer, the data can be used, and transferred into or from the WALRUC. | BB-SC-WALRUC-01 | FUN |
 | BB-REQ_ID__1.2 | Consent must be asked and verified in less than 30s | API call | API response |  | BB-SC-WALRUC-02 | PERF |
 | BB-REQ_ID__2 | WALRUC must request contracts from the building block consent via the Prometheus-X Dataspace Connector | API call | API response |  |  |  |
-| BB-REQ_ID__2.1 | The WALRUC must check with the contract manager through the Dataspace connector if a contract for the corresponding organization exists | API call | API response | If the answer is no, the data cannot be accessed, nor transferred into or from the PLRS. If the answer is yer, the data can be accessed, and transferred into or from the PLRS. | BB-SC-WALRUC-03 | DEP |
+| BB-REQ_ID__2.1 | The WALRUC must check with the contract manager through the Dataspace connector if a contract for the corresponding provider organization exists (the organization using WALRUC) | API call | API response | If the answer is no, the data cannot be accessed, nor transferred into or from the PLRS. If the answer is yer, the data can be accessed, and transferred into or from the PLRS. | BB-SC-WALRUC-03 | FUN |
 | BB-REQ_ID__2.2 | Contract must be asked and verified in less than 30s | API call | API response |  | BB-SC-WALRUC-04 | PERF |
 | BB-REQ_ID__3 | WALRUC must connect with BB Consent/contracts negotiating agent (EDGE-Skill) |  |  |  |  |  |
-| BB-REQ_ID__3.1 | BB must send the individual's consent profile when the WALRUC asks to adjust what and when they are tracked: all-time connection, only on weekends, certain keywords, etc. | API call | consent profile | Request consent 1 time, then update if the profile is modified in the corresponding building bloc. Could be asynchronous | BB-SC-WALRUC-05 | DEP |
-| BB-REQ_ID__3.2 | BB must update the individual's consent profile to WALRUC when there are changes | consent profile | / | update if the profile is modified in the corresponding building bloc. Could be asynchronous | BB-SC-WALRUC-06 | DEP |
+| BB-REQ_ID__3.1 | BB Consent/contracts negotiating agent must send the individual's consent profile when the WALRUC asks to adjust what and when they are tracked: all-time connection, only on weekends, certain keywords, etc. | API call from WALRUC | consent profile | Request consent 1 time, then update if the profile is modified in the corresponding building bloc. Could be asynchronous | BB-SC-WALRUC-05 | FUN |
+| BB-REQ_ID__3.2 | BB Consent/contracts negotiating agent must update the individual's consent profile to WALRUC when there are changes | consent profile | API call from Consent/contracts negotiating agent  | update if the profile is modified in the corresponding building bloc. Could be asynchronous | BB-SC-WALRUC-06 | FUN |
 
 ## Integrations
 
@@ -625,6 +625,18 @@ We will run manual and automatic tests.
 
 Using the personas, user stories, userflow and dataflow from the Wiki LOM use case, we established several test scenarios.
 Before putting V0 into the hands of users, we need to make sure that WALRUC works in a number of applications. We will need to test it at least on the "becomino" application linked to the LRS Learning Locker. The tests will be conclusive if we see the traces appear on Learning Locker.
+
+### Validate requirements
+Requirements validation tests
+
+| Verified by scenario| Description | Test | Status |
+|---|---|---|---|
+| BB-SC-WALRUC-01 | Individuals must consent to the use and export of their web analytics data as learning records in the WALRUC plugin of the organization| When creating an account, try to send data without consent |  Not yet tested |
+| BB-SC-WALRUC-02 | Consent must be asked and verified in less than 30s | Counting exchange time | Not yet tested |
+| BB-SC-WALRUC-03 | The WALRUC must check with the contract manager through the Dataspace connector if a contract for the corresponding provider organization exists (the organization using WALRUC) | try to provoke a data exchange without a contract  | Not yet tested |
+| BB-SC-WALRUC-04 | Contract must be asked and verified in less than 30s | Verfified time counting  | Not yet tested |
+| BB-SC-WALRUC-05 | BB Consent/contracts negotiating agent must send the individual's consent profile when the WALRUC asks to adjust what and when they are tracked: all-time connection, only on weekends, certain keywords, etc. | unit test  | Not yet tested |
+| BB-SC-WALRUC-06 | BB Consent/contracts negotiating agent must update the individual's consent profile to WALRUC when there are changes | unit test  | Not yet tested |
 
 **Manual test**
 
