@@ -637,6 +637,11 @@ Requirements validation tests
 | BB-SC-WALRUC-04 | Contract must be asked and verified in less than 30s | Verfified time counting  | Not yet tested |
 | BB-SC-WALRUC-05 | BB Consent/contracts negotiating agent must send the individual's consent profile when the WALRUC asks to adjust what and when they are tracked: all-time connection, only on weekends, certain keywords, etc. | unit test  | Not yet tested |
 | BB-SC-WALRUC-06 | BB Consent/contracts negotiating agent must update the individual's consent profile to WALRUC when there are changes | unit test  | Not yet tested |
+| Error-Scenario_1 | Data may be lost during migration| Check the declarations visible in the associated LRS | Not yet tested |
+| Error-Scenario_2 | The same data can be exported several times | Check the declarations visible in the associated LRS  | Not yet tested |
+| Error-Scenario_3 | The LRS doesn't have enough storage space for all statements | Check the storage of Matomo and associated LRS | Not yet tested |
+| Error-Scenario_4 | The system may require downtime for large exports|  Check the declarations visible in the associated LRS for large exports  | Not yet tested |
+| Error-Scenario_6 | The Matomo trace settings do not match the requested settings|  Check the declarations visible in the associated LRS, error message ?  | Not yet tested |
 
 **Manual test**
 
