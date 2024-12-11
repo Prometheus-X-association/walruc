@@ -79,7 +79,7 @@ class RequestProcessorTest extends TestCase
         $result = $this->requestProcessor->recordLogs($visitProperties, $request);
 
         // Assert
-        $this->assertFalse($result); // Should return false as per Matomo's conventions
+        self::assertFalse($result); // Should return false as per Matomo's conventions
     }
 
     public function testShouldHandleConversionError(): void

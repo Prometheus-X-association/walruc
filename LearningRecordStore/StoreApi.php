@@ -41,7 +41,7 @@ class StoreApi implements StoreInterface
             throw StorageException::storageFailed('API returned error status');
         }
 
-        $this->logger->info('Store response received from LMS', ['response' => $jsonResponse]);
+        $this->logger->info('Store response received from LRS', ['response' => $jsonResponse]);
 
         return StoreResponse::fromJson($jsonResponse);
     }

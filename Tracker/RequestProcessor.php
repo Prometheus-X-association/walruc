@@ -42,7 +42,7 @@ class RequestProcessor extends \Piwik\Tracker\RequestProcessor
 
         $trackingData = $this->getExportedData(visitProperties: $visitProperties, request: $request, site: $site);
         $convertedData = $this->sendDataToLRC(trackingData: $trackingData);
-        $storeData = $this->sendTraceToLMS($convertedData);
+        $storeData = $this->sendTraceToLRS($convertedData);
 
         $this->logger->info('Request processed', ['uuid' => $storeData->getUuid()]);
         return false;
@@ -139,7 +139,7 @@ class RequestProcessor extends \Piwik\Tracker\RequestProcessor
         }
     }
 
-    private function sendTraceToLMS(ConverterResponse $trace): StoreResponse
+    private function sendTraceToLRS(ConverterResponse $trace): StoreResponse
     {
         try {
             return $this->store->store($trace);
