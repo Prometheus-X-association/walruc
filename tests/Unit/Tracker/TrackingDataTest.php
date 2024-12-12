@@ -44,20 +44,20 @@ class TrackingDataTest extends TestCase
         $result = $data->toArray();
 
         // Assert
-        $this->assertIsArray($result);
-        $this->assertEquals('Test Site', $result['siteName']);
-        $this->assertEquals('127.0.0.1', $result['visitIp']);
-        $this->assertEquals('user123', $result['user_id']);
+        self::assertIsArray($result);
+        self::assertEquals('Test Site', $result['siteName']);
+        self::assertEquals('127.0.0.1', $result['visitIp']);
+        self::assertEquals('user123', $result['user_id']);
 
-        $this->assertArrayHasKey('actionDetails', $result);
-        $this->assertEquals('action', $result['actionDetails']['type']);
-        $this->assertEquals(1635789600, $result['actionDetails']['timestamp']);
-        $this->assertEquals('https://example.com', $result['actionDetails']['url']);
-        $this->assertEquals('Test Page', $result['actionDetails']['title']);
-        $this->assertEquals(30, $result['actionDetails']['timeSpent']);
+        self::assertArrayHasKey('actionDetails', $result);
+        self::assertEquals('action', $result['actionDetails']['type']);
+        self::assertEquals(1635789600, $result['actionDetails']['timestamp']);
+        self::assertEquals('https://example.com', $result['actionDetails']['url']);
+        self::assertEquals('Test Page', $result['actionDetails']['title']);
+        self::assertEquals(30, $result['actionDetails']['timeSpent']);
 
-        $this->assertEquals('Chrome', $result['browserName']);
-        $this->assertEquals('FR', $result['countryCode']);
+        self::assertEquals('Chrome', $result['browserName']);
+        self::assertEquals('FR', $result['countryCode']);
     }
 
     public function testShouldHandleNullValues(): void
@@ -78,21 +78,21 @@ class TrackingDataTest extends TestCase
         $result = $data->toArray();
 
         // Assert
-        $this->assertIsArray($result);
+        self::assertIsArray($result);
         foreach (['siteName', 'visitIp', 'user_id'] as $key) {
-            $this->assertArrayHasKey($key, $result);
-            $this->assertNull($result[$key]);
+            self::assertArrayHasKey($key, $result);
+            self::assertNull($result[$key]);
         }
 
-        $this->assertArrayHasKey('actionDetails', $result);
+        self::assertArrayHasKey('actionDetails', $result);
 
         foreach (['url', 'title', 'timestamp'] as $key) {
-            $this->assertArrayHasKey($key, $result['actionDetails']);
-            $this->assertNull($result['actionDetails'][$key]);
+            self::assertArrayHasKey($key, $result['actionDetails']);
+            self::assertNull($result['actionDetails'][$key]);
         }
 
-        $this->assertEquals('action', $result['actionDetails']['type']);
-        $this->assertEquals(0, $result['actionDetails']['timeSpent']);
+        self::assertEquals('action', $result['actionDetails']['type']);
+        self::assertEquals(0, $result['actionDetails']['timeSpent']);
     }
 
     public function testShouldRejectNegativeTimestamp(): void
@@ -177,7 +177,7 @@ class TrackingDataTest extends TestCase
         $result = $data->toArray();
 
         // Assert
-        $this->assertEquals('2001:0db8:85a3:0000:0000:8a2e:0370:7334', $result['visitIp']);
+        self::assertEquals('2001:0db8:85a3:0000:0000:8a2e:0370:7334', $result['visitIp']);
     }
 
     public function testShouldHandleSpecialCharacters(): void
@@ -198,11 +198,11 @@ class TrackingDataTest extends TestCase
         $result = $data->toArray();
 
         // Assert
-        $this->assertEquals('Test Site éèà', $result['siteName']);
-        $this->assertEquals('user_Москва', $result['user_id']);
-        $this->assertEquals('https://example.com/?q=特殊字符', $result['actionDetails']['url']);
-        $this->assertEquals('Page with Special Characters 😊', $result['actionDetails']['title']);
-        $this->assertEquals(PHP_INT_MAX, $result['actionDetails']['timestamp']);
+        self::assertEquals('Test Site éèà', $result['siteName']);
+        self::assertEquals('user_Москва', $result['user_id']);
+        self::assertEquals('https://example.com/?q=特殊字符', $result['actionDetails']['url']);
+        self::assertEquals('Page with Special Characters 😊', $result['actionDetails']['title']);
+        self::assertEquals(PHP_INT_MAX, $result['actionDetails']['timestamp']);
     }
 
     /**
@@ -217,11 +217,11 @@ class TrackingDataTest extends TestCase
             timestamp: 1635789600,
             url: $url,
             title: 'Test Page',
-            timeSpent: 30
+            timeSpent: 30,
         );
 
         $result = $data->toArray();
-        $this->assertEquals($url, $result['actionDetails']['url']);
+        self::assertEquals($url, $result['actionDetails']['url']);
     }
 
     public function validUrlProvider(): array
