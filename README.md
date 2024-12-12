@@ -25,9 +25,8 @@ Before installing the WALRUC plugin, ensure you have:
 
 ### Configuration
 1. Log in to Matomo administration interface
-2 Navigate to Administration > Plugin Settings
+2. Navigate to Administration > Plugin Settings
 3. Find "WALRUC" in the list
 4. Configure the following settings:
     - LRS Endpoint URL
     - LRS API Key
-5. 
