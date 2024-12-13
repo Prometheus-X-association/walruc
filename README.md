@@ -14,8 +14,8 @@ Before installing the WALRUC plugin, ensure you have:
 - PHP 8.2 or later
 - Access to your Matomo server with administrator privileges
 - A Learning Record Store (LRS) endpoint URL
-- An API key for your LRS
-- Access to the Learning Record Converter (LRC)
+- A basic auth url for your LRS
+- Access to the Learning Record Converter (LRC) 
 
 ### Installation
 
@@ -29,4 +29,5 @@ Before installing the WALRUC plugin, ensure you have:
 3. Find "WALRUC" in the list
 4. Configure the following settings:
     - LRS Endpoint URL
-    - LRS API Key
+    - LRS basic auth
+    - LRC link if hosted elsewhere than Inokufu
