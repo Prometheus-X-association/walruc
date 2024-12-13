@@ -13,6 +13,7 @@ However, it is important to note that while the WALRUC is deeply involved in dat
 ## Technical Choice
 
 **LRS**
+
 The Walruc Plugin will connect an account of Matomo Analytics with Learning Record Stores of the same organization in order to export web analytics data from Matomo. 
 
 To perform our tests, we have deployed 1 LRS on [Learning Locker](https://learninglocker.atlassian.net/wiki/spaces/DOCS/overview).
@@ -22,6 +23,7 @@ Please note that we are not making any changes to the LRS. The LRS just needs to
 
 
 **Matomo**
+
 [Matomo](https://fr.matomo.org/) is an open-source web analytics platform that offers detailed insights into website traffic and user behavior, serving as a powerful alternative to Google Analytics. Chosen for its strong focus on data privacy and compliance, Matomo ensures our deployment adheres to regulations like GDPR by providing tools for managing user consent and data. 
 
 Matomo can be deployed in two ways, and for the purpose of strengthening the test instance of the plugin, Matomo Cloud and Matomo On-premise must be functional:
@@ -33,6 +35,7 @@ Matomo can be deployed in two ways, and for the purpose of strengthening the tes
 Please note that we are not making any changes to the Matomo. The Matomo just needs to be deployed for testing, but only the WALRUC extension is deliverable. The matomo will be deployed by each organization, and they will install the WALRUC plugin on it.
 
 **Website**
+
 As previously explained, Matomo will serve as the tool to collect web analytics data, which will then be transmitted to the organization's LRS through the Walruc plugin. For this purpose, three websites should be used as sources of navigation traces:
 https://becomino.com/home
 https://constellation.inokufu.com/
@@ -103,6 +106,8 @@ A training organization can use WALRUC service to track and analyze the engageme
 | BB-REQ_ID__3.1 | BB LRC (ARIANE project) must convert traces from WALRUC | matomo statement | xAPI DASES statement |  | BB-SC-WALRUC-04 | DEP |
 | BB-REQ_ID__3.2 |WALRUC must send traces to LRC in less than 30 seconds (after receiving a matomo trace in WALRUC) | matomo statement  | xAPI DASES statement |  | BB-SC-WALRUC-05 | PERF |
 | BB-REQ_ID__3.3 |LRC must send traces to WALRUC in less than 30 seconds (after conversion) | matomo statement  | xAPI DASES statement |  | BB-SC-WALRUC-06 | PERF |
+| BB-REQ_ID__4 | WALRUC must be connected to Matomo |  |  |  |  |  |
+| BB-REQ_ID__4.1 | Matomo must send traces to WALRUC in less than 30 seconds | matomo statement |matomo statement|  | BB-SC-WALRUC-07 | DEP |
 
 ## Integrations
 
@@ -137,6 +142,20 @@ How?
 Why?
 
 - The LRC converts a trace from matomo format to xAPI DASES format
+
+**Interact with Matomo**
+
+How?
+
+- HTTP request
+
+- synchronous
+
+- input/output : matomo statement
+
+Why?
+
+- Matomo sends web trace
 
 
 ## Relevant Standards
@@ -403,7 +422,7 @@ For example, the matomo statement above breaks down into an xAPI DASES statement
 		"output_format": "xapi",
 		"profile": "lms.accessed-page"
 	}
-}
+
 ```
 
 
@@ -450,15 +469,17 @@ PDC : Prometheus-X Dataspace Connector
 ## Configuration and deployment settings
 
 **Installation**
+
 The organization must :
 
-- Install Matomo on a server
+- Install Matomo 5.2.0 or later on a server
 
 - Deploy an LRS (learning locker for example)
 
 - Install WALRUC plugin on Matomo
 
 **Settings**
+
 The organization must :
 - Matomo
  - Connect a website to Matomo
@@ -551,11 +572,33 @@ The Walruc plugin is triggered when a visit is made to the site and works as fol
 
 Insofar as WALRUC makes calls to external APIs (the LRC and LRS), services may be temporarily unavailable for various reasons. For this reason, an exponential backoff system has been implemented, i.e. if an HTTP call fails, it is retried, if necessary several times, with an increasingly long delay between each attempt and a maximum number of attempts.
 
-### Installation
-To install the WALRUC plugin :
-- download the file : 
-- install it on your Matomo
-- link an LRS in WALRUC settings
+#### WALRUC Plugin Installation Guide
+
+#### Prerequisites
+
+Before installing the WALRUC plugin, ensure you have:
+
+- Matomo 5.2.0 or later installed
+- PHP 8.2 or later
+- Access to your Matomo server with administrator privileges
+- A Learning Record Store (LRS) endpoint URL
+- A basic auth url for your LRS
+- Access to the Learning Record Converter (LRC) 
+
+#### Installation
+
+1. Download the latest release
+2. Extract the archive in a `Walruc` folder inside Matomo's `plugins` folder
+3. Activate the plugin in the plug-in manager of your administration interface
+
+#### Configuration
+1. Log in to Matomo administration interface
+2. Navigate to Administration > Plugin Settings
+3. Find "WALRUC" in the list
+4. Configure the following settings:
+    - LRS Endpoint URL
+    - LRS basic auth
+    - LRC link if hosted elsewhere than Inokufu
 
 ## Test specification
 
@@ -569,6 +612,7 @@ The Web Analytics Learning Record Universal Connector tests ensure that :
 The Walruc testing strategy will focus on ensuring the accuracy, reliability and performance of its functionality. We will use a combination of unit testing, integration testing and user interface testing. The test environment will reproduce conditions similar to those in production in order to accurately validate BB behavior. Acceptance criteria will be defined on the basis of user stories, functional requirements and performance criteria.
 
 **Methodology**
+
 We will run manual and units tests.
 
 Using the personas, user stories, userflow and dataflow from the Wiki LOM use case, we established several test scenarios.
@@ -585,19 +629,22 @@ Tests to validate requirements and potential risks.
 | BB-SC-WALRUC-04 |BB LRC (ARIANE project) must convert traces from WALRUC  | Send a dataset for conversion  | Validated : no error message |
 | BB-SC-WALRUC-05 | WALRUC must send traces to LRC in less than 30 seconds (after receiving a matomo trace in WALRUC | Average send time < 30 seconds | Validated|
 | BB-SC-WALRUC-06 | LRC must send traces to WALRUC in less than 30 seconds (after conversion)| Average send time < 30 seconds | Validated|
+| BB-SC-WALRUC-07 | Matomo must send traces to WALRUC in less than 30 seconds| Average send time < 30 seconds | Validated|
 | Error-Scenario_1 | Data may be lost when sending to LRS| Check the declarations visible in the associated LRS | Validated |
 | Error-Scenario_2 | Data may be lost when sending to LRC| Check the declarations visible in the associated LRS | Validated |
 | Error-Scenario_3 | The LRS doesn't have enough storage space for all statements | Check the storage of Matomo and associated LRS | Not yet tested |
 | Error-Scenario_5 | The Matomo trace settings do not match the requested settings|  Check the declarations visible in the associated LRS, for a non-matching trace | Validated : error message |
 
 
+
 **Manual test**
 
-Persona 1 : kylian (Learner)
+Several manual tests of the same type (visiting several pages of a website) are carried out. Example:
 
+Persona 1 : kylian (Learner)
 Persona 2 : mmedupont (LRS admin)
 
-Scenario 1 :
+Scenario :
 On October 17, 2024, Kylian visits page https://becomino.com/home at 2:30pm for 4 seconds, then page https://becomino.com/board/valorisation-batiment-1701336809956x653082361463832600 for 8 seconds, then page https://becomino.com/category/economie-circulaire for 36 seconds.
 The WALRUC extension is connected to mmedupont's LRS.
 
@@ -741,7 +788,9 @@ Statements
 }
 ```
 
+
 **Unit tests**
+
 Thanks to our unit tests, we were able to prove these next elements.
 
 For the “Visit information formatting recovery” section:
