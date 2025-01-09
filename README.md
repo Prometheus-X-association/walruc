@@ -2,6 +2,7 @@
 
 Web Analytics Learning Records Universal Connector enables the conversion of web analytics data collected by Matomo, into an xAPI DASES format that can be stored and tracked in an Learning Record Store. This plugin seeks to promote data transactions within the Dataspace by providing a tool to facilitate the export of web analytics data from Matomo to the organizational LRS in the xAPI DASES standard. It ensures data interoperability to provide an overview of users' learning paths.
 
+## Design Document
 See the design document [here](docs/design-document.md).
 
 ## WALRUC Plugin Installation Guide
@@ -17,7 +18,12 @@ Before installing the WALRUC plugin, ensure you have:
 - A basic auth url for your LRS
 - Access to the Learning Record Converter (LRC) 
 
-### Installation
+### Building instructions
+_Describe how to build the BB._
+
+E.g.: `docker build -t <bb name>:latest .` or `npm install` 
+
+### Running instructions
 
 1. Download the latest release
 2. Extract the archive in a `Walruc` folder inside Matomo's `plugins` folder
@@ -31,3 +37,14 @@ Before installing the WALRUC plugin, ensure you have:
     - LRS Endpoint URL
     - LRS basic auth
     - LRC link if hosted elsewhere than Inokufu
+
+## Example usage
+_Describe how to check some basic functionality of the BB._
+E.g.:
+
+Send the following requests to the designated endpoints:
+| Endpoint      | Example input | Expected output   |
+| ------------- | ------------- | ----------------- |
+| /hello        | World         | 200, Hello World! |
+|               |               |                   |
+|               |               |                   |
