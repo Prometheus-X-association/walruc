@@ -38,13 +38,14 @@ E.g.: `docker build -t <bb name>:latest .` or `npm install`
     - LRS basic auth
     - LRC link if hosted elsewhere than Inokufu
 
-## Example usage
-_Describe how to check some basic functionality of the BB._
-E.g.:
+## Usage
+As the plugin is not an API, there is no endpoint for use.
+Once installed and configured, the WALRUC plugin works in total autonomy.
+When an individual browses pages containing a Matomo configured with WALRUC, one (or more) traces will be visible in the target LRS.
+```mermaid
 
-Send the following requests to the designated endpoints:
-| Endpoint      | Example input | Expected output   |
-| ------------- | ------------- | ----------------- |
-| /hello        | World         | 200, Hello World! |
-|               |               |                   |
-|               |               |                   |
+flowchart LR
+
+A[An individual navigates a page]--> B[Collect Matomo web browsing analytics]--> C[Convert Matomo web browsing analytics into xAPI DASES format]--> D[Transfer data to an LRS]
+
+```
