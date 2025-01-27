@@ -18,11 +18,6 @@ Before installing the WALRUC plugin, ensure you have:
 - A basic auth url for your LRS
 - Access to the Learning Record Converter (LRC) 
 
-### Building instructions
-_Describe how to build the BB._
-
-E.g.: `docker build -t <bb name>:latest .` or `npm install` 
-
 ### Running instructions
 
 1. Download the latest release
