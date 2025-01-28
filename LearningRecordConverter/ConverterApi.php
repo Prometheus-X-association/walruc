@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Piwik\Plugins\Walruc\LearningRecordConverter;
 
 use Piwik\Config;
+use Piwik\Container\StaticContainer;
 use Piwik\Log\LoggerInterface;
 use Piwik\Plugins\Walruc\Exceptions\ConversionException;
 use Piwik\Plugins\Walruc\Exceptions\HttpException;
@@ -29,8 +30,7 @@ class ConverterApi implements ConverterInterface
 
     public function convert(TrackingData $trackingData): ConverterResponse
     {
-        $endpoint = $this->config->getFromLocalConfig('Walruc')[self::ENDPOINT_CONFIG]
-            ?? throw new ConversionException('Missing LRC endpoint configuration');
+        $endpoint = StaticContainer::get('lrc.endpoint');
 
         $body = [
             'input_format' => self::INPUT_FORMAT,
