@@ -26,12 +26,12 @@ class HttpClient implements HttpClientInterface
         return $this->retryHandler->executeWithRetry(
             operation: function () use ($url, $method, $body, $headers, $timeout): string {
                 $response = Http::sendHttpRequestBy(
-                    Http::getTransportMethod(),
-                    $url,
-                    $timeout,
-                    $method,
-                    $body,
-                    $headers,
+                    method: Http::getTransportMethod(),
+                    aUrl: $url,
+                    timeout: $timeout,
+                    httpMethod: $method,
+                    requestBody: $body,
+                    additionalHeaders: $headers,
                 );
 
                 if (!$response) {
