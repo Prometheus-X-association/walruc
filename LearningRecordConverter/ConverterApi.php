@@ -15,7 +15,7 @@ use Piwik\Plugins\Walruc\Tracker\TrackingData;
 class ConverterApi implements ConverterInterface
 {
     private const INPUT_FORMAT = 'matomo';
-    private const ENDPOINT_CONFIG = 'lrcEndpoint';
+    private const ENDPOINT_CONFIG = 'lrc.endpoint';
 
     private LoggerInterface $logger;
     private Config $config;
@@ -30,7 +30,7 @@ class ConverterApi implements ConverterInterface
 
     public function convert(TrackingData $trackingData): ConverterResponse
     {
-        $endpoint = StaticContainer::get('lrc.endpoint');
+        $endpoint = StaticContainer::get(self::ENDPOINT_CONFIG);
 
         $body = [
             'input_format' => self::INPUT_FORMAT,
