@@ -34,8 +34,7 @@ Before installing the WALRUC plugin, ensure you have:
 2. Navigate to Administration > Plugin Settings
 3. Find "WALRUC" in the list
 4. Configure the following settings:
-    - LRS Endpoint URL
-    - LRS API Key
+    - LRS Endpoint POST URL (usually ending in /statements)
     - LRS basic auth
     - LRC link if hosted elsewhere than Inokufu
 
