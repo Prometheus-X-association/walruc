@@ -32,6 +32,10 @@ Before installing the WALRUC plugin, ensure you have:
     - LRS Endpoint POST URL (usually ending in /statements)
     - LRS basic auth
     - LRC link if hosted elsewhere than Inokufu
+  
+If you don’t have an LRS you can use the WALRUC Client LRS : 
+- URL : https://lrs.dataspace.inokufu.com/data/xAPI/statements  
+- Basic auth : NjE0ODE1MWE2NDY4MjY3ZmVlMGQ3N2NkOTQzNDM3YzJiOWE3Y2E5YTowMzdlNTgxMmNhNjUzN2Y1OGU2ZjZkNGE2YjQxOWEyNmUyYmQzYjFh
 
 ## Usage
 As the plugin is not an API, there is no endpoint for use.
