@@ -574,31 +574,36 @@ Insofar as WALRUC makes calls to external APIs (the LRC and LRS), services may b
 
 #### WALRUC Plugin Installation Guide
 
-#### Prerequisites
+##### Prerequisites
 
 Before installing the WALRUC plugin, ensure you have:
 
 - Matomo 5.2.0 or later installed
 - PHP 8.2 or later
 - Access to your Matomo server with administrator privileges
-- A Learning Record Store (LRS) endpoint URL
-- A basic auth url for your LRS
-- Access to the Learning Record Converter (LRC) 
+- A Learning Record Store (LRS) endpoint POST URL (usually ending in /statements)
+- A LRS basic auth
+- Access to the Learning Record Converter (LRC)
 
-#### Installation
+##### Running instructions
 
 1. Download the latest release
 2. Extract the archive in a `Walruc` folder inside Matomo's `plugins` folder
 3. Activate the plugin in the plug-in manager of your administration interface
 
-#### Configuration
+##### Configuration
 1. Log in to Matomo administration interface
 2. Navigate to Administration > Plugin Settings
 3. Find "WALRUC" in the list
 4. Configure the following settings:
-    - LRS Endpoint URL
+    - LRS Endpoint POST URL (usually ending in /statements)
     - LRS basic auth
     - LRC link if hosted elsewhere than Inokufu
+  
+If you don’t have an LRS you can use the WALRUC Client LRS : 
+- URL : https://lrs.dataspace.inokufu.com/data/xAPI/statements  
+- Basic auth : NjE0ODE1MWE2NDY4MjY3ZmVlMGQ3N2NkOTQzNDM3YzJiOWE3Y2E5YTowMzdlNTgxMmNhNjUzN2Y1OGU2ZjZkNGE2YjQxOWEyNmUyYmQzYjFh
+
 
 ## Test specification
 
