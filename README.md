@@ -48,3 +48,13 @@ flowchart LR
 A[An individual navigates a page]--> B[Collect Matomo web browsing analytics]--> C[Convert Matomo web browsing analytics into xAPI DASES format]--> D[Transfer data to an LRS]
 
 ```
+
+## Unit testing
+### Setup test environment
+### Run tests
+### Expected results
+
+## Component-level testing
+### Setup test environment
+### Run tests
+### Expected results
