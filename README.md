@@ -14,14 +14,9 @@ Before installing the WALRUC plugin, ensure you have:
 - Matomo 5.2.0 or later installed
 - PHP 8.2 or later
 - Access to your Matomo server with administrator privileges
-- A Learning Record Store (LRS) endpoint URL
-- An API key for your LRS
+- A Learning Record Store (LRS) endpoint POST URL (usually ending in /statements)
+- A LRS basic auth
 - Access to the Learning Record Converter (LRC)
-
-### Installation
-=======
-- A basic auth url for your LRS
-- Access to the Learning Record Converter (LRC) 
 
 ### Running instructions
 
@@ -34,10 +29,13 @@ Before installing the WALRUC plugin, ensure you have:
 2. Navigate to Administration > Plugin Settings
 3. Find "WALRUC" in the list
 4. Configure the following settings:
-    - LRS Endpoint URL
-    - LRS API Key
+    - LRS Endpoint POST URL (usually ending in /statements)
     - LRS basic auth
     - LRC link if hosted elsewhere than Inokufu
+  
+If you don’t have an LRS you can use the WALRUC Client LRS : 
+- URL : https://lrs.dataspace.inokufu.com/data/xAPI/statements  
+- Basic auth : NjE0ODE1MWE2NDY4MjY3ZmVlMGQ3N2NkOTQzNDM3YzJiOWE3Y2E5YTowMzdlNTgxMmNhNjUzN2Y1OGU2ZjZkNGE2YjQxOWEyNmUyYmQzYjFh
 
 ## Usage
 As the plugin is not an API, there is no endpoint for use.
@@ -50,3 +48,13 @@ flowchart LR
 A[An individual navigates a page]--> B[Collect Matomo web browsing analytics]--> C[Convert Matomo web browsing analytics into xAPI DASES format]--> D[Transfer data to an LRS]
 
 ```
+
+## Unit testing
+### Setup test environment
+### Run tests
+### Expected results
+
+## Component-level testing
+### Setup test environment
+### Run tests
+### Expected results

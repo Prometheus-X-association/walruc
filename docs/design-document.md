@@ -574,31 +574,36 @@ Insofar as WALRUC makes calls to external APIs (the LRC and LRS), services may b
 
 #### WALRUC Plugin Installation Guide
 
-#### Prerequisites
+##### Prerequisites
 
 Before installing the WALRUC plugin, ensure you have:
 
 - Matomo 5.2.0 or later installed
 - PHP 8.2 or later
 - Access to your Matomo server with administrator privileges
-- A Learning Record Store (LRS) endpoint URL
-- A basic auth url for your LRS
-- Access to the Learning Record Converter (LRC) 
+- A Learning Record Store (LRS) endpoint POST URL (usually ending in /statements)
+- A LRS basic auth
+- Access to the Learning Record Converter (LRC)
 
-#### Installation
+##### Running instructions
 
 1. Download the latest release
 2. Extract the archive in a `Walruc` folder inside Matomo's `plugins` folder
 3. Activate the plugin in the plug-in manager of your administration interface
 
-#### Configuration
+##### Configuration
 1. Log in to Matomo administration interface
 2. Navigate to Administration > Plugin Settings
 3. Find "WALRUC" in the list
 4. Configure the following settings:
-    - LRS Endpoint URL
+    - LRS Endpoint POST URL (usually ending in /statements)
     - LRS basic auth
     - LRC link if hosted elsewhere than Inokufu
+  
+If you don’t have an LRS you can use the WALRUC Client LRS : 
+- URL : https://lrs.dataspace.inokufu.com/data/xAPI/statements  
+- Basic auth : NjE0ODE1MWE2NDY4MjY3ZmVlMGQ3N2NkOTQzNDM3YzJiOWE3Y2E5YTowMzdlNTgxMmNhNjUzN2Y1OGU2ZjZkNGE2YjQxOWEyNmUyYmQzYjFh
+
 
 ## Test specification
 
@@ -613,183 +618,60 @@ The Walruc testing strategy will focus on ensuring the accuracy, reliability and
 
 **Methodology**
 
-We will run manual and units tests.
+Summary of test :
+- Validate requirements and potential risks
+- Manual Usage Scenario
+- Unit test
 
-Using the personas, user stories, userflow and dataflow from the Wiki LOM use case, we established several test scenarios.
-Before putting V0 into the hands of users, we need to make sure that WALRUC works in a number of applications. We will need to test it at least on the "becomino" application linked to the LRS Learning Locker. The tests will be conclusive if we see the traces appear on Learning Locker.
+For our test we will use : 
+- website connected to the Matomo : https://becomino.com/
+- LRS : https://lrs.dataspace.inokufu.com/data/xAPI/statements, basic auth NjE0ODE1MWE2NDY4MjY3ZmVlMGQ3N2NkOTQzNDM3YzJiOWE3Y2E5YTowMzdlNTgxMmNhNjUzN2Y1OGU2ZjZkNGE2YjQxOWEyNmUyYmQzYjFh
+- the personas, user stories, userflow and dataflow from the Wiki LOM use case
+
+The tests will be conclusive if we see the traces appear on Learning Locker.
 
 ### Validate requirements and potential risks
 Tests to validate requirements and potential risks.
 
-| Verified by scenario| Description | Test | Status |
-|---|---|---|---|
-| BB-SC-WALRUC-01 | WALRUC converts the data collected by matomo. If the data is anonymized then WALRUC processes the anonymized data. The same applies if the data is pseudonomized or clear| Check whether the state of the input trace is the same as that of the output trace (anonymized, pseudonymized, clear) |  Validated |
-| BB-SC-WALRUC-02 | The organization's LRS must be connected to the dataspace| Try data exchange in dataspace without a PDC | Not yet tested |
-| BB-SC-WALRUC-03 | WALRUC must send traces to LRS in less than 30 seconds (after receiving the converted trace) | Average send time < 30 seconds| Validated|
-| BB-SC-WALRUC-04 |BB LRC (ARIANE project) must convert traces from WALRUC  | Send a dataset for conversion  | Validated : no error message |
-| BB-SC-WALRUC-05 | WALRUC must send traces to LRC in less than 30 seconds (after receiving a matomo trace in WALRUC | Average send time < 30 seconds | Validated|
-| BB-SC-WALRUC-06 | LRC must send traces to WALRUC in less than 30 seconds (after conversion)| Average send time < 30 seconds | Validated|
-| BB-SC-WALRUC-07 | Matomo must send traces to WALRUC in less than 30 seconds| Average send time < 30 seconds | Validated|
-| Error-Scenario_1 | Data may be lost when sending to LRS| Check the declarations visible in the associated LRS | Validated |
-| Error-Scenario_2 | Data may be lost when sending to LRC| Check the declarations visible in the associated LRS | Validated |
-| Error-Scenario_3 | The LRS doesn't have enough storage space for all statements | Check the storage of Matomo and associated LRS | Not yet tested |
-| Error-Scenario_5 | The Matomo trace settings do not match the requested settings|  Check the declarations visible in the associated LRS, for a non-matching trace | Validated : error message |
+| Verified by scenario| Description | Prerequisites | Test | Status |
+|---|---|---|---|---|
+| BB-SC-WALRUC-01 | WALRUC converts the data collected by matomo. If the data is anonymized then WALRUC processes the anonymized data. The same applies if the data is pseudonomized or clear| The WALRUC plugin is installed and configured. Access to the target LRS is required. | Check whether the state of the input trace is the same as that of the output trace (anonymized, pseudonymized, clear) |  Validated |
+| BB-SC-WALRUC-02 | The organization's LRS must be connected to the dataspace | The WALRUC plugin is installed and configured. Access to the target LRS is required. LRS of organization not connected to the PDC and not involved in the use case. | Try data exchange in dataspace without a PDC | Not yet tested |
+| BB-SC-WALRUC-03 | WALRUC must send traces to LRS in less than 30 seconds (after receiving the converted trace) | The WALRUC plugin is installed and configured. Access to the target LRS is required. | Average send time < 30 seconds| Validated|
+| BB-SC-WALRUC-04 |BB LRC (ARIANE project) must convert traces from WALRUC | The WALRUC plugin is installed and configured. Access to the target LRS is required.  | Send a dataset for conversion  | Validated : no error message |
+| BB-SC-WALRUC-05 | WALRUC must send traces to LRC in less than 30 seconds (after receiving a matomo trace in WALRUC) | The WALRUC plugin is installed and configured. Access to the target LRS is required.  | Average send time < 30 seconds | Validated|
+| BB-SC-WALRUC-06 | LRC must send traces to WALRUC in less than 30 seconds (after conversion) | The WALRUC plugin is installed and configured. Access to the target LRS is required. | Average send time < 30 seconds | Validated|
+| BB-SC-WALRUC-07 | Matomo must send traces to WALRUC in less than 30 seconds | The WALRUC plugin is installed and configured. Access to the target LRS is required. | Average send time < 30 seconds | Validated|
+| Error-Scenario_1 | Data may be lost when sending to LRS | The WALRUC plugin is installed and configured. Access to the target LRS is required.  | Check the declarations visible in the associated LRS | Validated |
+| Error-Scenario_2 | Data may be lost when sending to LRC | The WALRUC plugin is installed and configured. Access to the target LRS is required. | Check the declarations visible in the associated LRS | Validated |
+| Error-Scenario_3 | The LRS doesn't have enough storage space for all statements | The WALRUC plugin is installed and configured. Access to the target LRS is required. | Check the storage of Matomo and associated LRS | Not yet tested |
+| Error-Scenario_5 | The Matomo trace settings do not match the requested settings | The WALRUC plugin is installed and configured. Access to the target LRS is required. |  Check the declarations visible in the associated LRS, for a non-matching trace | Validated : error message |
 
 
 
-**Manual test**
-
-Several manual tests of the same type (visiting several pages of a website) are carried out. Example:
+### Manual usage scenario
+Several manual tests of the same type (visiting several pages of a website) are carried out.
 
 Persona 1 : kylian (Learner)
 Persona 2 : mmedupont (LRS admin)
 
 Scenario :
-On October 17, 2024, Kylian visits page https://becomino.com/home at 2:30pm for 4 seconds, then page https://becomino.com/board/valorisation-batiment-1701336809956x653082361463832600 for 8 seconds, then page https://becomino.com/category/economie-circulaire for 36 seconds.
+On February 4, 2025, Kylian visits page https://becomino.com at 10:51 am for 77 seconds, then page https://becomino.com/board/valorisation-batiment-1701336809956x653082361463832600 for 8 seconds, then page https://becomino.com/category/economie-circulaire for 36 seconds.
 The WALRUC extension is connected to mmedupont's LRS.
 
 Validation : the scenario is validated if it appears in mmedupont's LRS under 3 traces :
-- Kylian visited https://becomino.com/home on October 17, 2024 at 2:30pm for 4 seconds
-- Kylian visited https://becomino.com/board/valorisation-batiment-1701336809956x653082361463832600 on October 17, 2024 for 8 seconds
-- Kylian visited https://becomino.com/category/economie-circulaire on October 17, 2024 for 36 seconds
+- Kylian visited https://becomino.com/home on February 4, 2025 at 10:51 am for 77 seconds
+- Kylian visited https://becomino.com/category/sante on February 4, 2025 for 8 seconds
+- Kylian visited https://becomino.com/board/devenir-pro-prothese-dentaire-1641214891192x269783012203036670 on February 4, 2025 for 36 seconds
 
-Statements 
-  ```json
-{
-   "actor": {
-      "account": {
-         "name": "kylian",
-         "homePage": "https://www.becomino.com/"
-      }
-   },
-   "verb": {
-      "id": "https://w3id.org/xapi/netc/verbs/accessed"
-   },
-   "object": {
-      "objectType": "Activity",
-      "id": "https://becomino.com/home",
-      "definition": {
-         "type": "https://w3id.org/xapi/acrossx/activities/webpage",
-         "name": {
-            "en": "Home"
-         },
-         "extensions": {
-            "https://w3id.org/xapi/acrossx/extensions/type": "course"
-         }
-      }
-   },
-   "context": {
-      "contextActivities": {
-         "category": [
-            {
-               "id": "https://w3id.org/xapi/lms",
-               "definition": {
-                  "type": "http://adlnet.gov/expapi/activities/course_list"
-               }
-            }
-         ]
-      }
-         "extensions": {
-            "http://id.tincanapi.com/extension/duration": "4s",
-            "http://id.tincanapi.com/extension/browser-info": "Chrome 126.0"
-         }
-   }
-   "timestamp": "2024-10-17T14:30:0.887Z"
-}
-```
+Kylian is pseudonomized as `k)'3`.
 
-```json
-
-{
-   "actor": {
-      "account": {
-         "name": "kylian",
-         "homePage": "https://www.becomino.com/"
-      }
-   },
-   "verb": {
-      "id": "https://w3id.org/xapi/netc/verbs/accessed"
-   },
-   "object": {
-      "objectType": "Activity",
-      "id": "https://becomino.com/board/valorisation-batiment-1701336809956x653082361463832600",
-      "definition": {
-         "type": "https://w3id.org/xapi/acrossx/activities/webpage",
-         "name": {
-            "en": "Valorisation batiment"
-         },
-         "extensions": {
-            "https://w3id.org/xapi/acrossx/extensions/type": "course"
-         }
-      }
-   },
-   "context": {
-      "contextActivities": {
-         "category": [
-            {
-               "id": "https://w3id.org/xapi/lms",
-               "definition": {
-                  "type": "http://adlnet.gov/expapi/activities/course"
-               }
-            }
-         ]
-      }
-         "extensions": {
-            "http://id.tincanapi.com/extension/duration": "8s",
-            "http://id.tincanapi.com/extension/browser-info": "Chrome 126.0"
-         }
-   }
-   "timestamp": "2024-10-17T14:30:04.887Z"
-}
-```
-
-```json
-
-{
-   "actor": {
-      "account": {
-         "name": "kylian",
-         "homePage": "https://www.becomino.com/"
-      }
-   },
-   "verb": {
-      "id": "https://w3id.org/xapi/netc/verbs/accessed"
-   },
-   "object": {
-      "objectType": "Activity",
-      "id": "https://becomino.com/category/economie-circulaire",
-      "definition": {
-         "type": "https://w3id.org/xapi/acrossx/activities/webpage",
-         "name": {
-            "en": "Economie Circulaire"
-         },
-         "extensions": {
-            "https://w3id.org/xapi/acrossx/extensions/type": "course"
-         }
-      }
-   },
-   "context": {
-      "contextActivities": {
-         "category": [
-            {
-               "id": "https://w3id.org/xapi/lms",
-               "definition": {
-                  "type": "http://adlnet.gov/expapi/activities/course"
-               }
-            }
-         ]
-      }
-         "extensions": {
-            "http://id.tincanapi.com/extension/duration": "36s",
-            "http://id.tincanapi.com/extension/browser-info": "Chrome 126.0"
-         }
-   }
-   "timestamp": "2024-10-17T14:30:12.887Z"
-}
-```
+First statement :
+![trace1](https://github.com/user-attachments/assets/5cc8f4bc-5369-4063-9a3e-586c6d795dc7)
 
 
-**Unit tests**
+### Unit tests
+We performed unit tests on the entire flow. [Here are all the tests](https://github.com/Prometheus-X-association/walruc/tree/main/tests).
 
 Thanks to our unit tests, we were able to prove these next elements.
 
