@@ -49,12 +49,56 @@ A[An individual navigates a page]--> B[Collect Matomo web browsing analytics]-->
 
 ```
 
-## Unit testing
-### Setup test environment
-### Run tests
-### Expected results
+## Testing
 
-## Component-level testing
 ### Setup test environment
+
+Assuming Matomo and the WALRUC plugin are
+already [installed and configured](https://developer.matomo.org/guides/tests-php), you can run the tests directly.
+
 ### Run tests
-### Expected results
+
+Matomo provides a convenient command-line tool called `console` that includes a built-in test runner.
+From the Matomo root directory, you have to run :
+
+```bash
+./console tests:run Walruc
+```
+
+Matomo automatically configures and executes PHPUnit with the appropriate settings for the Matomo environment, and
+formats the results.
+
+### Test Summary
+
+The test suite verifies several key components of the plugin.
+The plugin uses proper dependency injection, making components easy to test in isolation.
+The tests use mocks for external services (LRC and LRS), avoiding the need for actual endpoints during testing.
+
+#### Request Processing
+
+- Data extraction from Matomo requests (user, date, page, etc.) works as expected, even for missing information.
+- End-to-end request processing flow functions correctly (conversion, storage).
+- Errors during conversion or storage are properly handled and logged.
+
+#### Data Handling
+
+- Data validation correctly filters invalid inputs (negative timestamps, invalid IPs, malformed URLs).
+- Special characters and Unicode are properly supported.
+- IPv6 addresses are correctly handled.
+- Various URL formats are properly validated.
+
+#### HTTP Component
+
+- The retry mechanism implements a robust error handling strategy that automatically retries failed HTTP requests.
+- An exponential backoff algorithm increases the delay between retry attempts (e.g., waiting longer after each failure)
+  to prevent overwhelming external services.
+- The system preserves original error information throughout the retry process for proper debugging and logging.
+
+### Final Assessment
+
+No critical issues were identified during testing.
+All tests pass, showing that:
+
+- The HTTP communication layer handles network issues gracefully.
+- The data extraction and validation logic works correctly.
+- Error handling is properly implemented.
