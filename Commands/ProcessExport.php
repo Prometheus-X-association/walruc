@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Piwik\Plugins\Walruc\Commands;
@@ -176,75 +177,73 @@ class ProcessExport extends ConsoleCommand
      */
     private function loadDataFromInternalAPI(SymfonyStyle $io, string $siteId, string $date): array
     {
-        // Fixed parameters for API
-        $period = 'range';
-        $format = 'json';
-        $limit = 1000;
         $delayMs = 200;
+        $limit = 1000;
 
         $io->text('Fetching data from Matomo API');
-        $io->text("Site ID: $siteId, Period: $period, Date: $date");
+        $io->text("Site ID: $siteId, Date: $date");
 
         $allVisits = [];
         $offset = 0;
         $pageCount = 0;
         $continueFetching = true;
 
+        // Prepare API parameters
+        $params = [
+            'method' => 'Live.getLastVisitsDetails',
+            'format' => 'json',
+            'idSite' => $siteId,
+            'period' => 'range',
+            'date' => $date,
+            'filter_limit' => 1000,
+            'filter_offset' => $offset,
+        ];
+
         while ($continueFetching) {
             $pageCount++;
 
             $io->text("Fetching page $pageCount (offset: $offset)...");
 
+            $params['filter_offset'] = $offset;
+            // Call the API internally
             try {
-                // Prepare API parameters
-                $params = [
-                    'method' => 'Live.getLastVisitsDetails',
-                    'format' => $format,
-                    'idSite' => $siteId,
-                    'period' => $period,
-                    'date' => $date,
-                    'filter_limit' => $limit,
-                    'filter_offset' => $offset,
-                ];
-
-                // Call the API internally
                 $request = new Request($params);
                 $response = $request->process();
-                $responseData = json_decode($response, true);
-                if (json_last_error() !== JSON_ERROR_NONE) {
-                    throw new \InvalidArgumentException('Invalid JSON content: ' . json_last_error_msg());
-                }
-
-                // Check if response is empty or not an array
-                if (!is_array($responseData) || empty($responseData)) {
-                    $io->text('No more visits found. Stopping fetch.');
-                    break;
-                }
-
-                // Add visits to collection
-                $visitCount = count($responseData);
-                $allVisits = array_merge($allVisits, $responseData);
-                $io->text("Fetched $visitCount visits (total: " . count($allVisits) . ')');
-
-                // Update offset for next page
-                $offset += $limit;
-
-                // If we got fewer results than the limit, we've reached the end
-                if ($visitCount < $limit) {
-                    $continueFetching = false;
-                }
-
-                // Add delay between requests to reduce server load
-                if ($delayMs > 0 && $continueFetching) {
-                    usleep($delayMs * 1000);
-                }
             } catch (\Exception $e) {
                 $io->error('API request failed: ' . $e->getMessage());
                 $this->logger->error('API request failed', [
                     'error' => $e->getMessage(),
-                    'params' => $params ?? [],
+                    'params' => $params,
                 ]);
                 break;
+            }
+            $responseData = json_decode($response, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new \InvalidArgumentException('Invalid JSON content: ' . json_last_error_msg());
+            }
+
+            // Check if response is empty or not an array
+            if (!is_array($responseData) || empty($responseData)) {
+                $io->text('No more visits found. Stopping fetch.');
+                break;
+            }
+
+            // Add visits to collection
+            $visitCount = count($responseData);
+            $allVisits = array_merge($allVisits, $responseData);
+            $io->text("Fetched $visitCount visits (total: " . count($allVisits) . ')');
+
+            // Update offset for next page
+            $offset += $limit;
+
+            // If we got fewer results than the limit, we've reached the end
+            if ($visitCount < $limit) {
+                $continueFetching = false;
+            }
+
+            // Add delay between requests to reduce server load
+            if ($delayMs > 0 && $continueFetching) {
+                usleep($delayMs * 1000);
             }
         }
 
