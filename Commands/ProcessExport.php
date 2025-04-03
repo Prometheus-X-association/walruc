@@ -13,6 +13,7 @@ use Piwik\Plugins\Walruc\Exceptions\StorageException;
 use Piwik\Plugins\Walruc\LearningRecordConverter\ConverterInterface;
 use Piwik\Plugins\Walruc\LearningRecordConverter\ConverterResponse;
 use Piwik\Plugins\Walruc\LearningRecordStore\StoreInterface;
+use Piwik\Plugins\Walruc\LearningRecordStore\StoreResponse;
 use Piwik\Plugins\Walruc\Tracker\TrackingData;
 use Piwik\Site;
 use Symfony\Component\Console\Style\SymfonyStyle;
