@@ -11,7 +11,7 @@ See the design document [here](docs/design-document.md).
 
 Before installing the WALRUC plugin, ensure you have:
 
-- Matomo 5.2.0 or later installed
+- [Matomo 5.2.0 or later installed](https://github.com/matomo-org/matomo?tab=readme-ov-file)
 - PHP 8.2 or later
 - Access to your Matomo server with administrator privileges
 - A Learning Record Store (LRS) endpoint POST URL (usually ending in /statements)
@@ -32,8 +32,11 @@ Before installing the WALRUC plugin, ensure you have:
     - LRS Endpoint POST URL (usually ending in /statements)
     - LRS basic auth
     - LRC link if hosted elsewhere than Inokufu
-  
-If you don’t have an LRS you can use the WALRUC Client LRS : 
+
+#### Don't have an LRS ?
+If you don't have an LRS, you can deploy Docker [LRSC](https://github.com/inokufu/lrsc), which deploys an LRS (Leaning Locker), a PDC and a connector between the two. 
+
+If you don't have an LRS and don't want to deploy it, you can directly add the LRS of Inokufu : 
 - URL : https://lrs.dataspace.inokufu.com/data/xAPI/statements  
 - Basic auth : NjE0ODE1MWE2NDY4MjY3ZmVlMGQ3N2NkOTQzNDM3YzJiOWE3Y2E5YTowMzdlNTgxMmNhNjUzN2Y1OGU2ZjZkNGE2YjQxOWEyNmUyYmQzYjFh
 
