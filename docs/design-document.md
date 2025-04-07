@@ -635,60 +635,76 @@ Tests to validate requirements and potential risks.
 
 | Verified by scenario| Description | Prerequisites | Test | Status |
 |---|---|---|---|---|
-| BB-SC-WALRUC-01 | WALRUC converts the data collected by matomo. If the data is anonymized then WALRUC processes the anonymized data. The same applies if the data is pseudonomized or clear| The WALRUC plugin is installed and configured. Access to the target LRS is required. | Check whether the state of the input trace is the same as that of the output trace (anonymized, pseudonymized, clear) |  Validated |
+| BB-SC-WALRUC-01 | WALRUC converts the data collected by matomo. If the data is anonymized then WALRUC processes the anonymized data. The same applies if the data is pseudonomized or clear| The WALRUC plugin is installed and configured. Access to the target LRS is required. | Navigate to the web page linked to the matomo. Check whether the statement is visible in matomo and LRS in the same format (anonymous, pseudonymized, clear). |  Validated : I see pseudonomysed statements in the LRS  |
 | BB-SC-WALRUC-02 | The organization's LRS must be connected to the dataspace | The WALRUC plugin is installed and configured. Access to the target LRS is required. LRS of organization not connected to the PDC and not involved in the use case. | Try data exchange in dataspace without a PDC | Not yet tested |
-| BB-SC-WALRUC-03 | WALRUC must send traces to LRS in less than 30 seconds (after receiving the converted trace) | The WALRUC plugin is installed and configured. Access to the target LRS is required. | Average send time < 30 seconds| Validated|
-| BB-SC-WALRUC-04 |BB LRC (ARIANE project) must convert traces from WALRUC | The WALRUC plugin is installed and configured. Access to the target LRS is required.  | Send a dataset for conversion  | Validated : no error message |
-| BB-SC-WALRUC-05 | WALRUC must send traces to LRC in less than 30 seconds (after receiving a matomo trace in WALRUC) | The WALRUC plugin is installed and configured. Access to the target LRS is required.  | Average send time < 30 seconds | Validated|
-| BB-SC-WALRUC-06 | LRC must send traces to WALRUC in less than 30 seconds (after conversion) | The WALRUC plugin is installed and configured. Access to the target LRS is required. | Average send time < 30 seconds | Validated|
-| BB-SC-WALRUC-07 | Matomo must send traces to WALRUC in less than 30 seconds | The WALRUC plugin is installed and configured. Access to the target LRS is required. | Average send time < 30 seconds | Validated|
-| Error-Scenario_1 | Data may be lost when sending to LRS | The WALRUC plugin is installed and configured. Access to the target LRS is required.  | Check the declarations visible in the associated LRS | Validated |
-| Error-Scenario_2 | Data may be lost when sending to LRC | The WALRUC plugin is installed and configured. Access to the target LRS is required. | Check the declarations visible in the associated LRS | Validated |
-| Error-Scenario_3 | The LRS doesn't have enough storage space for all statements | The WALRUC plugin is installed and configured. Access to the target LRS is required. | Check the storage of Matomo and associated LRS | Not yet tested |
-| Error-Scenario_5 | The Matomo trace settings do not match the requested settings | The WALRUC plugin is installed and configured. Access to the target LRS is required. |  Check the declarations visible in the associated LRS, for a non-matching trace | Validated : error message |
+| BB-SC-WALRUC-04 |BB LRC (ARIANE project) must convert traces from WALRUC | The WALRUC plugin is installed and configured. Access to the target LRS is required.  | Navigate to the web page linked to the matomo. Check whether the statement is visible in matomo and LRS | Validated : We can see statements in the LRS and no error message |
+| Error-Scenario_1 | Data may be lost when sending to LRS | The WALRUC plugin is installed and configured. Access to the target LRS is required.  |Navigate to the web page linked to the matomo. Check the declarations visible in the associated LRS | Validated |
+| Error-Scenario_2 | Data may be lost when sending to LRC | The WALRUC plugin is installed and configured. Access to the target LRS is required. | Navigate to the web page linked to the matomo. Check the declarations visible in the associated LRS | Validated |
+| Error-Scenario_5 | The WALRUC settings do not match the requested settings | The WALRUC plugin is installed and configured. Access to the target LRS is required. |  Trying to enter incorrect information in the parameters section | Validated : error message |
 
 
 
 ### Manual usage scenario
 Several manual tests of the same type (visiting several pages of a website) are carried out.
 
-Persona 1 : kylian (Learner)
-Persona 2 : mmedupont (LRS admin)
+Persona : kylian (Learner)
+Organisation : School1 (LRS admin)
 
 Scenario :
-On February 4, 2025, Kylian visits page https://becomino.com at 10:51 am for 77 seconds, then page https://becomino.com/board/valorisation-batiment-1701336809956x653082361463832600 for 8 seconds, then page https://becomino.com/category/economie-circulaire for 36 seconds.
-The WALRUC extension is connected to mmedupont's LRS.
+School1 has aldredy an LRS and a Matomo. It installs the WALRUC plugin in the Matomo.
 
-Validation : the scenario is validated if it appears in mmedupont's LRS under 3 traces :
-- Kylian visited https://becomino.com/home on February 4, 2025 at 10:51 am for 77 seconds
-- Kylian visited https://becomino.com/category/sante on February 4, 2025 for 8 seconds
-- Kylian visited https://becomino.com/board/devenir-pro-prothese-dentaire-1641214891192x269783012203036670 on February 4, 2025 for 36 seconds
+On March 4, 2025, Kylian visits page https://becomino.com/home at 05h51 for 0 second, then page https://becomino.com/board/devenir-pro-soins-animaliers-1646322127345x5145537 for 176 seconds, then page https://becomino.com for 336 seconds.
+The WALRUC extension is connected to School1's LRS.
 
-Kylian is pseudonomized as `k)'3`.
+To validate this usage scenario, we need to see this sequence of traces in the Matomo tool and the 3 following traces in School1's LRS :
+- Kylian visited https://becomino.com/home on march 4, 2025 at 05:51 am for 0 seconds
+- Kylian visited https://becomino.com/board/devenir-pro-soins-animaliers-1646322127345x5145537 on march 4, 2025 for 176 seconds
+- Kylian visited https://becomino.com on march 4, 2025 for 336 seconds
 
-First statement :
-![trace1](https://github.com/user-attachments/assets/5cc8f4bc-5369-4063-9a3e-586c6d795dc7)
+Kylian is pseudonomized as `4&0*`.
 
+*Validation in Matomo*
+We can see the 3 statements in Matomo.
+![matomo inokufu com_index php_module=CoreHome action=index idSite=5 period=day date=yesterday(grand)](https://github.com/user-attachments/assets/384afbde-3681-43ea-8e3d-b716138799c1)
+
+*Validation in LRS*
+- Kylian visited https://becomino.com/home on march 4, 2025 at 05:51 am for 0 seconds
+![T1](https://github.com/user-attachments/assets/87222569-4896-4a3a-b32e-44b9e331f493)
+
+- Kylian visited https://becomino.com/board/devenir-pro-soins-animaliers-1646322127345x5145537 on march 4, 2025 for 176 seconds
+![T2](https://github.com/user-attachments/assets/48698751-f848-41bc-ab65-d9b90f06eb77)
+
+- Kylian visited https://becomino.com on march 4, 2025 for 336 seconds
+![T3](https://github.com/user-attachments/assets/0607ca91-e6e9-4b13-8a0c-284f943aedc9)
+
+*Validation*
+As we can see from the 3 statements in Matomo and LRS, the WALRUC plugin is effective.
 
 ### Unit tests
 We performed unit tests on the entire flow. [Here are all the tests](https://github.com/Prometheus-X-association/walruc/tree/main/tests).
 
-Thanks to our unit tests, we were able to prove these next elements.
+[1. request processor](https://github.com/Prometheus-X-association/walruc/blob/65a8acfc4712f436a29cf2de1f01b919a83c19a9/tests/Unit/Tracker/RequestProcessorTest.php#L63) :
+- [Correctly extracts data from Matomo requests](https://github.com/Prometheus-X-association/walruc/blob/65a8acfc4712f436a29cf2de1f01b919a83c19a9/tests/Unit/Tracker/RequestProcessorTest.php#L63)
+- [Properly converts tracking data via LRC](https://github.com/Prometheus-X-association/walruc/blob/65a8acfc4712f436a29cf2de1f01b919a83c19a9/tests/Unit/Tracker/RequestProcessorTest.php#L85)
+- [Successfully stores converted data in LRS](https://github.com/Prometheus-X-association/walruc/blob/65a8acfc4712f436a29cf2de1f01b919a83c19a9/tests/Unit/Tracker/RequestProcessorTest.php#L107C21-L107C49)
+- [Handles errors appropriately](https://github.com/Prometheus-X-association/walruc/blob/65a8acfc4712f436a29cf2de1f01b919a83c19a9/tests/Unit/Tracker/RequestProcessorTest.php#L133)
+- [Logs relevant information](https://github.com/Prometheus-X-association/walruc/blob/65a8acfc4712f436a29cf2de1f01b919a83c19a9/tests/Unit/Tracker/RequestProcessorTest.php#L159)
 
-For the “Visit information formatting recovery” section:
-- For a visit whose information is fixed by the test (Ip, date, page, etc.), the formatting must generate the data in a form also fixed by the test.
-- For a visit where some information is missing, the data must be generated correctly.
-- For a visit with incorrect information (negative dates, invalid IP, invalid URL), the process should send an error.
-- Information such as IP in v6 format, accented characters or URLs in exotic formats must be taken into account.
+[2. TrackingData DTO (Data Transfer Object)](https://github.com/Prometheus-X-association/walruc/blob/65a8acfc4712f436a29cf2de1f01b919a83c19a9/tests/Unit/Tracker/TrackingDataTest.php) :
+- [Properly formats tracking data](https://github.com/Prometheus-X-association/walruc/blob/65a8acfc4712f436a29cf2de1f01b919a83c19a9/tests/Unit/Tracker/TrackingDataTest.php#L26)
+- Validates input data ([IP addresses](https://github.com/Prometheus-X-association/walruc/blob/65a8acfc4712f436a29cf2de1f01b919a83c19a9/tests/Unit/Tracker/TrackingDataTest.php#L162), [URLs](https://github.com/Prometheus-X-association/walruc/blob/65a8acfc4712f436a29cf2de1f01b919a83c19a9/tests/Unit/Tracker/TrackingDataTest.php#L130), [timestamps](https://github.com/Prometheus-X-association/walruc/blob/65a8acfc4712f436a29cf2de1f01b919a83c19a9/tests/Unit/Tracker/TrackingDataTest.php#L114))
+- [Handles null values and defaults](https://github.com/Prometheus-X-association/walruc/blob/65a8acfc4712f436a29cf2de1f01b919a83c19a9/tests/Unit/Tracker/TrackingDataTest.php#L63)
+- [Supports special characters and Unicode](https://github.com/Prometheus-X-association/walruc/blob/65a8acfc4712f436a29cf2de1f01b919a83c19a9/tests/Unit/Tracker/TrackingDataTest.php#L183)
+
+[3. HTTP Handler](https://github.com/Prometheus-X-association/walruc/blob/65a8acfc4712f436a29cf2de1f01b919a83c19a9/tests/Unit/Http/RetryHttpHandlerTest.php)
+
 
 For the parts concerning HTTP calls to the LRC or LRS:
-- LRC : role of LRC-side tests.
-- The exponential backoff is triggered in the event of an error, so that if the maximum number of trials is reached, this is indicated by an error, and the delays between each trial are respected.
-
-Tests are carried out on the entire process:
-- When there is a visit, the conversion method must be called once, then the storage method once.
-- If the conversion method returns an error, logs are written.
-- If the store method returns an error, logs must be written.
+- [Correctly send without retry](https://github.com/Prometheus-X-association/walruc/blob/65a8acfc4712f436a29cf2de1f01b919a83c19a9/tests/Unit/Http/RetryHttpHandlerTest.php#L34)
+- [Correctly sen after one retry](https://github.com/Prometheus-X-association/walruc/blob/65a8acfc4712f436a29cf2de1f01b919a83c19a9/tests/Unit/Http/RetryHttpHandlerTest.php#L55)
+- Test [the maximum number of trials is reached](https://github.com/Prometheus-X-association/walruc/blob/65a8acfc4712f436a29cf2de1f01b919a83c19a9/tests/Unit/Http/RetryHttpHandlerTest.php#L80), this is indicated by an error, 
+- [The delays between each trial are respected](https://github.com/Prometheus-X-association/walruc/blob/65a8acfc4712f436a29cf2de1f01b919a83c19a9/tests/Unit/Http/RetryHttpHandlerTest.php#L105)
+- [Test of original exception](https://github.com/Prometheus-X-association/walruc/blob/65a8acfc4712f436a29cf2de1f01b919a83c19a9/tests/Unit/Http/RetryHttpHandlerTest.php#L145)
 
 ## Partners & roles
 [Inokufu](https://www.inokufu.com/) (BB leader): 
