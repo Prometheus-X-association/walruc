@@ -12,7 +12,6 @@ use Piwik\Plugins\Walruc\LearningRecordConverter\ConverterInterface;
 use Piwik\Plugins\Walruc\LearningRecordConverter\ConverterResponse;
 use Piwik\Plugins\Walruc\LearningRecordStore\StoreInterface;
 use Piwik\Plugins\Walruc\LearningRecordStore\StoreResponse;
-use Piwik\Site;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visit\VisitProperties;
 
