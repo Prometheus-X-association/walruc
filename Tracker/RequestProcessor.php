@@ -12,7 +12,6 @@ use Piwik\Plugins\Walruc\LearningRecordConverter\ConverterInterface;
 use Piwik\Plugins\Walruc\LearningRecordConverter\ConverterResponse;
 use Piwik\Plugins\Walruc\LearningRecordStore\StoreInterface;
 use Piwik\Plugins\Walruc\LearningRecordStore\StoreResponse;
-use Piwik\Site;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visit\VisitProperties;
 
@@ -35,12 +34,7 @@ class RequestProcessor extends \Piwik\Tracker\RequestProcessor
     {
         $this->logger->info('Request received');
 
-        $site = null;
-        if ($siteId = $visitProperties->getProperty('idsite')) {
-            $site = new Site($siteId);
-        }
-
-        $trackingData = $this->getExportedData(visitProperties: $visitProperties, request: $request, site: $site);
+        $trackingData = $this->getExportedData(visitProperties: $visitProperties, request: $request);
         $convertedData = $this->sendDataToLRC(trackingData: $trackingData);
         $storeData = $this->sendTraceToLRS($convertedData);
 
@@ -55,7 +49,7 @@ class RequestProcessor extends \Piwik\Tracker\RequestProcessor
      * @param Request $request HTTP Request
      * @return TrackingData Formatted data for export
      */
-    private function getExportedData(VisitProperties $visitProperties, Request $request, ?Site $site): TrackingData
+    private function getExportedData(VisitProperties $visitProperties, Request $request): TrackingData
     {
         try {
             $ip = $request->getIpString();
@@ -67,6 +61,18 @@ class RequestProcessor extends \Piwik\Tracker\RequestProcessor
             $url = $request->getParam('url');
         } catch (Exception) {
             $url = null;
+        }
+
+        $mainUrl = null;
+        if ($url) {
+            try {
+                $parts = parse_url($url);
+                if (isset($parts['host'])) {
+                    $scheme = $parts['scheme'] ?? 'http';
+                    $mainUrl = $scheme . '://' . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '');
+                }
+            } catch (Exception $e) {
+            }
         }
 
         try {
@@ -115,7 +121,7 @@ class RequestProcessor extends \Piwik\Tracker\RequestProcessor
         );
 
         return new TrackingData(
-            siteName: $site?->getMainUrl(),
+            siteName: $mainUrl,
             visitIp: $ip,
             userId: $userId,
             timestamp: $request->getCurrentTimestamp(),
