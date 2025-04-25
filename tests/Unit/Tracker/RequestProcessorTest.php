@@ -141,11 +141,11 @@ class RequestProcessorTest extends TestCase
             ->with(
                 $this->callback(function (TrackingData $trackingData) {
                     $actualData = $trackingData->toArray();
-                    return $actualData['siteName'] === 'http://example.com'
+                    return $actualData['siteName'] === 'https://example.com'
                         && $actualData['visitIp'] === '127.0.0.1'
                         && $actualData['user_id'] === '42'
                         && $actualData['actionDetails']['type'] === 'action'
-                        && $actualData['actionDetails']['url'] === 'https://example.com'
+                        && $actualData['actionDetails']['url'] === 'https://example.com/toto'
                         && $actualData['actionDetails']['title'] === 'Test Page'
                         && $actualData['actionDetails']['timeSpent'] === 12
                         && $actualData['actionDetails']['timestamp'] === 1635789600;
@@ -183,7 +183,7 @@ class RequestProcessorTest extends TestCase
 
         $request->method('getParam')
             ->willReturnMap([
-                ['url', 'https://example.com'],
+                ['url', 'https://example.com/toto'],
                 ['action_name', 'Test Page'],
             ]);
         $request->method('getIpString')
