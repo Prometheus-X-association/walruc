@@ -36,6 +36,7 @@ For plugin development, a hybrid approach works best:
 #### Required Files
 
 - [docker-compose.yml](./development/docker-compose.yml) : Inspired by the official file.
+  The matomo installation needs to be in the `app` folder.
 
 - [Dockerfile](./development/Dockerfile): Based on the official Matomo PHP-FPM Dockerfile, but without the Matomo code
   retrieval part
