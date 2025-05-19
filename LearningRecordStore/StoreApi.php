@@ -27,11 +27,11 @@ class StoreApi implements StoreInterface
     {
         try {
             $jsonResponse = $this->httpClient->sendRequest(
-                url: $this->settings->lrsEndpoint->getValue(),
+                url: $this->settings->storeEndpoint->getValue(),
                 method: 'POST',
                 body: json_encode($trace->getTrace()),
                 headers: [
-                    'Authorization: Basic ' . $this->settings->lrsApiKey->getValue(),
+                    'Authorization: Basic ' . $this->settings->storeApiKey->getValue(),
                     'X-Experience-API-Version: ' . $trace->getVersion(),
                     'Accept: application/json',
                     'Content-Type: application/json; charset=utf-8',

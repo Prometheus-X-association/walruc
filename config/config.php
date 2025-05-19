@@ -13,8 +13,6 @@ use Piwik\Plugins\Walruc\LearningRecordStore\StoreApi;
 use Piwik\Plugins\Walruc\LearningRecordStore\StoreInterface;
 
 return [
-    'lrc.endpoint' => DI::string('https://lrc-dev.inokufu.space/convert'),
-
     // Dependencies injection
     ConverterInterface::class => DI::autowire(ConverterApi::class),
     StoreInterface::class => DI::autowire(StoreApi::class),
