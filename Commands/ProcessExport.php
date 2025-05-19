@@ -298,7 +298,7 @@ class ProcessExport extends ConsoleCommand
                     ]);
                 } catch (\Exception $e) {
                     $lastError = $e;
-                    $currentRetryDelay = $retryDelayMs * pow(2, $attempt - 1);
+                    $currentRetryDelayMs = $retryDelayMs * pow(2, $attempt - 1);
 
                     $this->logger->debug('API request attempt failed', [
                         'attempt' => $attempt,
@@ -311,11 +311,11 @@ class ProcessExport extends ConsoleCommand
                                 "API request failed (attempt %d/%d). Retrying in %.1f seconds...",
                                 $attempt,
                                 $maxRetries,
-                                $currentRetryDelay / 1000,
+                                $currentRetryDelayMs / 1000,
                             ),
                         );
 
-                        usleep($currentRetryDelay * 1000);
+                        sleep($currentRetryDelayMs);
                     }
                     break;
                 }
