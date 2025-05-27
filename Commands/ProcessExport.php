@@ -118,6 +118,8 @@ class ProcessExport extends ConsoleCommand
             }
         }
 
+        $processingTime = round(microtime(true) - $startTime, 2);
+
         $io->section('Processing Summary');
         $io->table(
             ['Metric', 'Value'],
@@ -125,7 +127,7 @@ class ProcessExport extends ConsoleCommand
                 ['Total visits', $totalVisits],
                 ['Successfully processed', $successCount],
                 ['Failed', $errorCount],
-                ['Processing time', round(microtime(true) - $startTime, 2) . ' seconds'],
+                ['Processing time', $processingTime . ' seconds'],
             ],
         );
 
