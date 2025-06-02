@@ -10,17 +10,20 @@ use Piwik\Validators\NotEmpty;
 
 class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
 {
-    public SystemSetting $lrsEndpoint;
+    public SystemSetting $storeEndpoint;
 
-    public SystemSetting $lrsApiKey;
+    public SystemSetting $storeApiKey;
+
+    public SystemSetting $convertEndpoint;
 
     protected function init(): void
     {
-        $this->lrsEndpoint = $this->createLrsEndpointSetting();
-        $this->lrsApiKey = $this->createLrsApiKeySetting();
+        $this->storeEndpoint = $this->createStoreEndpointSetting();
+        $this->storeApiKey = $this->createStoreApiKeySetting();
+        $this->convertEndpoint = $this->createConvertEndpointSetting();
     }
 
-    private function createLrsEndpointSetting(): SystemSetting
+    private function createStoreEndpointSetting(): SystemSetting
     {
         return $this->makeSetting(
             name: 'lrsEndpoint',
@@ -35,7 +38,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
         );
     }
 
-    private function createLrsApiKeySetting(): SystemSetting
+    private function createStoreApiKeySetting(): SystemSetting
     {
         return $this->makeSetting(
             name: 'lrsApiKey',
@@ -45,6 +48,21 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
                 $field->title = 'LRS API Key';
                 $field->description = 'API key for Learning Record Store authentication';
                 $field->uiControl = FieldConfig::UI_CONTROL_PASSWORD;
+                $field->validators[] = new NotEmpty();
+            },
+        );
+    }
+
+    private function createConvertEndpointSetting(): SystemSetting
+    {
+        return $this->makeSetting(
+            name: 'lrcEndpoint',
+            defaultValue: 'https://lrc-dev.inokufu.space/convert',
+            type: FieldConfig::TYPE_STRING,
+            fieldConfigCallback: static function (FieldConfig $field) {
+                $field->title = 'LRC Endpoint URL';
+                $field->description = 'The URL of the Learning Record Converter API Endpoint to convert a trace';
+                $field->uiControl = FieldConfig::UI_CONTROL_URL;
                 $field->validators[] = new NotEmpty();
             },
         );
