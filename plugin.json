@@ -19,7 +19,7 @@
     "docs": "https://github.com/Prometheus-X-association/walruc/tree/main/docs"
   },
   "homepage": "https://github.com/Prometheus-X-association/walruc",
-  "license": "GPL v3+",
+  "license": "MIT",
   "keywords": [
     "walruc"
   ]
