@@ -100,7 +100,7 @@ A training organization can use WALRUC service to track and analyze the engageme
 | BB-REQ_ID__1 | The Matomo connected to WALRUC must ask users for consent to use their personal data | | |  |  |  |
 | BB-REQ_ID__1.1 | WALRUC converts the data collected by matomo. If the data is anonymized then WALRUC processes the anonymized data. The same applies if the data is pseudonomized or clear | Matomo policies | Matomo settings | | BB-SC-WALRUC-01 | DEP |
 | BB-REQ_ID__2 | WALRUC must be connected to an LRS | credential of LRS |  |  |  |  |
-| BB-REQ_ID__2.1 | The organization's LRS must be connected to the dataspace | PDC | PDC | | BB-SC-WALRUC-02 | DEP |
+| BB-REQ_ID__2.1 | The organization's LRS could be connected to the dataspace | PDC | PDC | | BB-SC-WALRUC-02 | PERF |
 | BB-REQ_ID__2.2 |WALRUC must send traces to LRS in less than 30 seconds (after receiving the converted trace) | xAPI | xAPI |  | BB-SC-WALRUC-03 | PERF |
 | BB-REQ_ID__3 | WALRUC must be connected to BB LRC | call API | call API |  |  |  |
 | BB-REQ_ID__3.1 | BB LRC (ARIANE project) must convert traces from WALRUC | matomo statement | xAPI DASES statement |  | BB-SC-WALRUC-04 | DEP |
@@ -235,7 +235,7 @@ Here is an example of Matomo logs for a user who visited a page on http://localh
 ```json
 {
     "siteName": "http://localhost:3000",
-    "visitIp": "172.19.0.1",
+    "visitIp": "XXXX",
     "user_id": null,
     "actionDetails": {
         "type": "action",
@@ -256,7 +256,7 @@ Here is an example of Matomo logs for a user who visited a page on http://localh
     "referrerKeyword": null,
     "referrerUrl": "",
     "interactions": 0,
-    "location_ip": "\u0013\u0000\u0000",
+    "location_ip": "XXXX",
     "visit_last_action_time": 1733927799,
     "visit_first_action_time": 1733925893,
     "visit_exit_idaction_url": 4,
@@ -377,7 +377,7 @@ For example, the matomo statement above breaks down into an xAPI DASES statement
 						"countryCode": "fr"
 					}
 				},
-				"http://id.tincanapi.com/extension/ip-address": "172.19.0.1",
+				"http://id.tincanapi.com/extension/ip-address": "XXXX",
 				"http://id.tincanapi.com/extension/irl": "http://localhost:3000/test.html"
 			},
 			"contextActivities": {
@@ -599,10 +599,6 @@ Before installing the WALRUC plugin, ensure you have:
     - LRS Endpoint POST URL (usually ending in /statements)
     - LRS basic auth
     - LRC link if hosted elsewhere than Inokufu
-  
-If you don’t have an LRS you can use the WALRUC Client LRS : 
-- URL : https://lrs.dataspace.inokufu.com/data/xAPI/statements  
-- Basic auth : NjE0ODE1MWE2NDY4MjY3ZmVlMGQ3N2NkOTQzNDM3YzJiOWE3Y2E5YTowMzdlNTgxMmNhNjUzN2Y1OGU2ZjZkNGE2YjQxOWEyNmUyYmQzYjFh
 
 
 ## Test specification
@@ -625,7 +621,6 @@ Summary of test :
 
 For our test we will use : 
 - website connected to the Matomo : https://becomino.com/
-- LRS : https://lrs.dataspace.inokufu.com/data/xAPI/statements, basic auth NjE0ODE1MWE2NDY4MjY3ZmVlMGQ3N2NkOTQzNDM3YzJiOWE3Y2E5YTowMzdlNTgxMmNhNjUzN2Y1OGU2ZjZkNGE2YjQxOWEyNmUyYmQzYjFh
 - the personas, user stories, userflow and dataflow from the Wiki LOM use case
 
 The tests will be conclusive if we see the traces appear on Learning Locker.
@@ -636,7 +631,6 @@ Tests to validate requirements and potential risks.
 | Verified by scenario| Description | Prerequisites | Test | Status |
 |---|---|---|---|---|
 | BB-SC-WALRUC-01 | WALRUC converts the data collected by matomo. If the data is anonymized then WALRUC processes the anonymized data. The same applies if the data is pseudonomized or clear| The WALRUC plugin is installed and configured. Access to the target LRS is required. | Navigate to the web page linked to the matomo. Check whether the statement is visible in matomo and LRS in the same format (anonymous, pseudonymized, clear). |  Validated : I see pseudonomysed statements in the LRS  |
-| BB-SC-WALRUC-02 | The organization's LRS must be connected to the dataspace | The WALRUC plugin is installed and configured. Access to the target LRS is required. LRS of organization not connected to the PDC and not involved in the use case. | Try data exchange in dataspace without a PDC | Not yet tested |
 | BB-SC-WALRUC-04 |BB LRC (ARIANE project) must convert traces from WALRUC | The WALRUC plugin is installed and configured. Access to the target LRS is required.  | Navigate to the web page linked to the matomo. Check whether the statement is visible in matomo and LRS | Validated : We can see statements in the LRS and no error message |
 | Error-Scenario_1 | Data may be lost when sending to LRS | The WALRUC plugin is installed and configured. Access to the target LRS is required.  |Navigate to the web page linked to the matomo. Check the declarations visible in the associated LRS | Validated |
 | Error-Scenario_2 | Data may be lost when sending to LRC | The WALRUC plugin is installed and configured. Access to the target LRS is required. | Navigate to the web page linked to the matomo. Check the declarations visible in the associated LRS | Validated |
@@ -665,7 +659,7 @@ Kylian is pseudonomized as `4&0*`.
 
 *Validation in Matomo*
 We can see the 3 statements in Matomo.
-![matomo inokufu com_index php_module=CoreHome action=index idSite=5 period=day date=yesterday(grand)](https://github.com/user-attachments/assets/384afbde-3681-43ea-8e3d-b716138799c1)
+<img width="1492" alt="Capture d’écran 2025-06-23 à 17 49 53" src="https://github.com/user-attachments/assets/af20da77-2dec-4f67-aa39-c899530f15b7" />
 
 *Validation in LRS*
 - Kylian visited https://becomino.com/home on march 4, 2025 at 05:51 am for 0 seconds
