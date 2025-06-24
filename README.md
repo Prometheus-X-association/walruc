@@ -36,10 +36,6 @@ Before installing the WALRUC plugin, ensure you have:
 #### Don't have an LRS ?
 If you don't have an LRS, you can deploy Docker [LRSC](https://github.com/inokufu/lrsc), which deploys an LRS (Leaning Locker), a PDC and a connector between the two. 
 
-If you don't have an LRS and don't want to deploy it, you can directly add the LRS of Inokufu : 
-- URL : https://lrs.dataspace.inokufu.com/data/xAPI/statements  
-- Basic auth : NjE0ODE1MWE2NDY4MjY3ZmVlMGQ3N2NkOTQzNDM3YzJiOWE3Y2E5YTowMzdlNTgxMmNhNjUzN2Y1OGU2ZjZkNGE2YjQxOWEyNmUyYmQzYjFh
-
 ## Usage
 As the plugin is not an API, there is no endpoint for use.
 Once installed and configured, the WALRUC plugin works in total autonomy.
