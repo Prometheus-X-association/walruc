@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Piwik\Plugins\Walruc\LearningRecordConverter;
 
-use Piwik\Config;
-use Piwik\Container\StaticContainer;
+use JsonException;
 use Piwik\Log\LoggerInterface;
 use Piwik\Plugins\Walruc\Exceptions\ConversionException;
 use Piwik\Plugins\Walruc\Exceptions\HttpException;
@@ -35,23 +34,25 @@ class ConverterApi implements ConverterInterface
             'input_trace' => $trackingData->toArray(),
         ];
 
-        $this->logger->info('Converting data', ['body' => $body]);
+        $this->logger->debug('Converting data', ['body' => $body]);
 
         try {
             $jsonResponse = $this->httpClient->sendRequest(
                 url: $this->settings->convertEndpoint->getValue(),
                 method: 'POST',
-                body: json_encode($body, JSON_INVALID_UTF8_IGNORE),
+                body: json_encode($body, JSON_INVALID_UTF8_IGNORE | JSON_THROW_ON_ERROR),
                 headers: [
                     'Accept: application/json',
                     'Content-Type: application/json; charset=utf-8',
                 ],
             );
+        } catch (JsonException $exception) {
+            throw ConversionException::conversionFailed('Tracking data cannot be encoded as JSON', $exception);
         } catch (HttpException $exception) {
-            throw ConversionException::conversionFailed('Conversion API returned an error');
+            throw ConversionException::conversionFailed('Conversion API returned an error', $exception);
         }
 
-        $this->logger->info('Convert response received from LRC', ['response' => $jsonResponse]);
+        $this->logger->debug('Convert response received from LRC', ['response' => $jsonResponse]);
 
         return ConverterResponse::fromJson($jsonResponse);
     }

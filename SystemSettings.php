@@ -7,6 +7,7 @@ namespace Piwik\Plugins\Walruc;
 use Piwik\Settings\FieldConfig;
 use Piwik\Settings\Plugin\SystemSetting;
 use Piwik\Validators\NotEmpty;
+use Piwik\Validators\UrlLike;
 
 class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
 {
@@ -34,6 +35,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
                 $field->description = 'The URL of your Learning Record Store API Endpoint to store a trace';
                 $field->uiControl = FieldConfig::UI_CONTROL_URL;
                 $field->validators[] = new NotEmpty();
+                $field->validators[] = new UrlLike();
             },
         );
     }
@@ -64,6 +66,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
                 $field->description = 'The URL of the Learning Record Converter API Endpoint to convert a trace';
                 $field->uiControl = FieldConfig::UI_CONTROL_URL;
                 $field->validators[] = new NotEmpty();
+                $field->validators[] = new UrlLike();
             },
         );
     }

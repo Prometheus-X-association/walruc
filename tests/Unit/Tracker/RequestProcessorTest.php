@@ -15,7 +15,6 @@ use Piwik\Plugins\Walruc\LearningRecordStore\StoreInterface;
 use Piwik\Plugins\Walruc\LearningRecordStore\StoreResponse;
 use Piwik\Plugins\Walruc\Tracker\RequestProcessor;
 use Piwik\Plugins\Walruc\Tracker\TrackingData;
-use Piwik\Tests\Framework\Fixture;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visit\VisitProperties;
 
@@ -35,11 +34,10 @@ use Piwik\Tracker\Visit\VisitProperties;
  */
 class RequestProcessorTest extends TestCase
 {
-    private LoggerInterface|MockObject $logger;
-    private ConverterInterface|MockObject $converter;
-    private StoreInterface|MockObject $store;
+    private LoggerInterface&MockObject $logger;
+    private ConverterInterface&MockObject $converter;
+    private StoreInterface&MockObject $store;
     private RequestProcessor $requestProcessor;
-    private int $siteId;
 
     protected function setUp(): void
     {
@@ -49,8 +47,6 @@ class RequestProcessorTest extends TestCase
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->converter = $this->createMock(ConverterInterface::class);
         $this->store = $this->createMock(StoreInterface::class);
-
-        $this->siteId = Fixture::createWebsite('2016-01-01 00:00:01', 0, 'TestSite', 'http://example.com');
 
         // Create processor instance
         $this->requestProcessor = new RequestProcessor(
@@ -99,8 +95,7 @@ class RequestProcessorTest extends TestCase
                 $this->arrayHasKey('error'),
             );
 
-        // Act & Assert
-        $this->expectException(ConversionException::class);
+        // Act & Assert: the error is logged (see expectation above) and not rethrown
         $this->requestProcessor->recordLogs($visitProperties, $request);
     }
 
@@ -125,8 +120,29 @@ class RequestProcessorTest extends TestCase
                 $this->arrayHasKey('error'),
             );
 
-        // Act & Assert
-        $this->expectException(StorageException::class);
+        // Act & Assert: the error is logged (see expectation above) and not rethrown
+        $this->requestProcessor->recordLogs($visitProperties, $request);
+    }
+
+    public function testShouldNotPropagateUnexpectedErrors(): void
+    {
+        // Arrange
+        $visitProperties = $this->createVisitPropertiesMock();
+        $request = $this->createRequestMock();
+
+        $this->converter->expects($this->once())
+            ->method('convert')
+            ->willThrowException(new \TypeError('Unexpected type'));
+
+        $this->logger->expects($this->once())
+            ->method('error')
+            ->with(
+                'Tracking data export failed',
+                $this->callback(fn (array $context) => $context['exception'] === \TypeError::class
+                    && $context['error'] === 'Unexpected type'),
+            );
+
+        // Act & Assert: the error is logged and does not break the Matomo tracker
         $this->requestProcessor->recordLogs($visitProperties, $request);
     }
 
@@ -156,13 +172,64 @@ class RequestProcessorTest extends TestCase
         $this->requestProcessor->recordLogs($visitProperties, $request);
     }
 
-    private function createVisitPropertiesMock(): VisitProperties|MockObject
+    public function testShouldNotExportTokenAuth(): void
+    {
+        // Arrange
+        $visitProperties = $this->createVisitPropertiesMock();
+        $request = $this->createRequestMock(['token_auth' => 'secret', 'url' => 'https://example.com/toto', 'res' => '1920x1080']);
+
+        $this->converter->expects($this->once())
+            ->method('convert')
+            ->with(
+                $this->callback(function (TrackingData $trackingData) {
+                    $actualData = $trackingData->toArray();
+                    return !array_key_exists('token_auth', $actualData)
+                        && $actualData['res'] === '1920x1080'
+                        && !array_key_exists('url', $actualData);
+                }),
+            );
+
+        // Act
+        $this->requestProcessor->recordLogs($visitProperties, $request);
+    }
+
+    public function testShouldExportBinaryPropertiesAsText(): void
+    {
+        // Arrange
+        $visitProperties = $this->createMock(VisitProperties::class);
+        $visitProperties->method('getProperty')
+            ->willReturnMap([
+                ['idvisitor', hex2bin('5d2b1f9a0c3e7b41')],
+            ]);
+        $visitProperties->method('getProperties')
+            ->willReturn([
+                'config_id' => hex2bin('a1b2c3d4e5f60718'),
+                'location_ip' => inet_pton('192.168.1.10'),
+            ]);
+        $request = $this->createRequestMock();
+
+        $this->converter->expects($this->once())
+            ->method('convert')
+            ->with(
+                $this->callback(function (TrackingData $trackingData) {
+                    $actualData = $trackingData->toArray();
+                    return $actualData['visitorId'] === '5d2b1f9a0c3e7b41'
+                        && $actualData['config_id'] === 'a1b2c3d4e5f60718'
+                        && $actualData['location_ip'] === '192.168.1.10';
+                }),
+            );
+
+        // Act
+        $this->requestProcessor->recordLogs($visitProperties, $request);
+    }
+
+    private function createVisitPropertiesMock(): VisitProperties&MockObject
     {
         $visitProperties = $this->createMock(VisitProperties::class);
 
         $visitProperties->method('getProperty')
             ->willReturnMap([
-                ['idsite', $this->siteId],
+                ['idsite', 1],
                 ['idvisit', 123],
                 ['idvisitor', 12],
                 ['location_browser_lang', 'fr'],
@@ -177,7 +244,10 @@ class RequestProcessorTest extends TestCase
         return $visitProperties;
     }
 
-    private function createRequestMock(): Request|MockObject
+    /**
+     * @param array<string, mixed> $params Tracking request parameters
+     */
+    private function createRequestMock(array $params = []): Request&MockObject
     {
         $request = $this->createMock(Request::class);
 
@@ -193,7 +263,7 @@ class RequestProcessorTest extends TestCase
         $request->method('getForcedUserId')
             ->willReturn('42');
         $request->method('getParams')
-            ->willReturn([]);
+            ->willReturn($params);
 
         return $request;
     }

@@ -11,8 +11,12 @@ class ConverterResponse
 {
     public const DEFAULT_XAPI_VERSION = '1.0.3';
 
+    /** @var array<string, mixed> */
     private array $outputTrace;
 
+    /**
+     * @param array<string, mixed> $outputTrace
+     */
     public function __construct(array $outputTrace)
     {
         $this->outputTrace = $outputTrace;
@@ -21,12 +25,12 @@ class ConverterResponse
     public static function fromJson(string $json): self
     {
         try {
-            $data = json_decode($json, true, JSON_THROW_ON_ERROR);
+            $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
             throw ConversionException::conversionFailed('Invalid JSON response', $e);
         }
 
-        if (!isset($data['output_trace'])) {
+        if (!is_array($data['output_trace'] ?? null)) {
             throw ConversionException::invalidResponse();
         }
 
@@ -37,9 +41,14 @@ class ConverterResponse
 
     public function getVersion(): string
     {
-        return $this->getTrace()['version'] ?: self::DEFAULT_XAPI_VERSION;
+        $version = $this->getTrace()['version'] ?? null;
+
+        return is_string($version) && $version !== '' ? $version : self::DEFAULT_XAPI_VERSION;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getTrace(): array
     {
         return $this->outputTrace;

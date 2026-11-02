@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Piwik\Plugins\Walruc\LearningRecordStore;
 
+use JsonException;
 use Piwik\Log\LoggerInterface;
 use Piwik\Plugins\Walruc\Exceptions\StorageException;
 use Piwik\Plugins\Walruc\Http\HttpClientInterface;
@@ -29,7 +30,7 @@ class StoreApi implements StoreInterface
             $jsonResponse = $this->httpClient->sendRequest(
                 url: $this->settings->storeEndpoint->getValue(),
                 method: 'POST',
-                body: json_encode($trace->getTrace()),
+                body: json_encode($trace->getTrace(), JSON_THROW_ON_ERROR),
                 headers: [
                     'Authorization: Basic ' . $this->settings->storeApiKey->getValue(),
                     'X-Experience-API-Version: ' . $trace->getVersion(),
@@ -37,11 +38,13 @@ class StoreApi implements StoreInterface
                     'Content-Type: application/json; charset=utf-8',
                 ],
             );
+        } catch (JsonException $exception) {
+            throw StorageException::storageFailed('Trace cannot be encoded as JSON', $exception);
         } catch (\Exception $exception) {
-            throw StorageException::storageFailed('API returned error status');
+            throw StorageException::storageFailed('API returned error status', $exception);
         }
 
-        $this->logger->info('Store response received from LRS', ['response' => $jsonResponse]);
+        $this->logger->debug('Store response received from LRS', ['response' => $jsonResponse]);
 
         return StoreResponse::fromJson($jsonResponse);
     }

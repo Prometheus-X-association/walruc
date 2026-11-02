@@ -7,7 +7,7 @@ namespace Piwik\Plugins\Walruc\Http;
 use Closure;
 use Exception;
 use Piwik\Log\LoggerInterface;
-use Piwik\Plugins\Walruc\Exceptions\HttpException;
+use Piwik\Plugins\Walruc\Exceptions\WalrucException;
 
 class RetryHttpHandler implements RetryHandlerInterface
 {
@@ -23,7 +23,8 @@ class RetryHttpHandler implements RetryHandlerInterface
      *
      * @return mixed                    The result of the operation if it succeeds.
      *
-     * @throws HttpException            Throws the last exception encountered if all attempts fail.
+     * @throws Exception                The last exception, once all attempts failed
+     *                                  or as soon as a plugin exception is not retryable.
      */
     public function executeWithRetry(
         Closure $operation,
@@ -39,9 +40,10 @@ class RetryHttpHandler implements RetryHandlerInterface
             try {
                 return $operation();
             } catch (Exception $e) {
-                if ($attempt >= $maxAttempts) {
+                $isRetryable = !$e instanceof WalrucException || $e->isRetryable();
+                if ($attempt >= $maxAttempts || !$isRetryable) {
                     $logger->error(
-                        sprintf('%s failed permanently after %d attempts', $operationName, $maxAttempts),
+                        sprintf('%s failed permanently after %d attempt(s)', $operationName, $attempt),
                         [
                             'last_error' => $e->getMessage(),
                             'operation' => $operationName,
