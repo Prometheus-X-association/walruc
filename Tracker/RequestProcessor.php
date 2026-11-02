@@ -6,6 +6,7 @@ namespace Piwik\Plugins\Walruc\Tracker;
 
 use Exception;
 use Piwik\Log\LoggerInterface;
+use Piwik\Network\IPUtils;
 use Piwik\Plugins\Walruc\Exceptions\ConversionException;
 use Piwik\Plugins\Walruc\Exceptions\StorageException;
 use Piwik\Plugins\Walruc\LearningRecordConverter\ConverterInterface;
@@ -14,6 +15,7 @@ use Piwik\Plugins\Walruc\LearningRecordStore\StoreInterface;
 use Piwik\Plugins\Walruc\LearningRecordStore\StoreResponse;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visit\VisitProperties;
+use Throwable;
 
 class RequestProcessor extends \Piwik\Tracker\RequestProcessor
 {
@@ -34,9 +36,22 @@ class RequestProcessor extends \Piwik\Tracker\RequestProcessor
     {
         $this->logger->info('Request received');
 
-        $trackingData = $this->getExportedData(visitProperties: $visitProperties, request: $request);
-        $convertedData = $this->sendDataToLRC(trackingData: $trackingData);
-        $storeData = $this->sendTraceToLRS($convertedData);
+        // A failing export must not prevent Matomo from recording the visit
+        try {
+            $trackingData = $this->getExportedData(visitProperties: $visitProperties, request: $request);
+            $convertedData = $this->sendDataToLRC(trackingData: $trackingData);
+            $storeData = $this->sendTraceToLRS($convertedData);
+        } catch (ConversionException | StorageException) {
+            // Already logged by sendDataToLRC() / sendTraceToLRS()
+            return false;
+        } catch (Throwable $e) {
+            $this->logger->error('Tracking data export failed', [
+                'exception' => get_class($e),
+                'error' => $e->getMessage(),
+                'location' => $e->getFile() . ':' . $e->getLine(),
+            ]);
+            return false;
+        }
 
         $this->logger->info('Request processed', ['uuid' => $storeData->getUuid()]);
         return false;
@@ -65,13 +80,10 @@ class RequestProcessor extends \Piwik\Tracker\RequestProcessor
 
         $mainUrl = null;
         if ($url) {
-            try {
-                $parts = parse_url($url);
-                if (isset($parts['host'])) {
-                    $scheme = $parts['scheme'] ?? 'http';
-                    $mainUrl = $scheme . '://' . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '');
-                }
-            } catch (Exception $e) {
+            $parts = parse_url($url);
+            if (isset($parts['host'])) {
+                $scheme = $parts['scheme'] ?? 'http';
+                $mainUrl = $scheme . '://' . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '');
             }
         }
 
@@ -104,20 +116,26 @@ class RequestProcessor extends \Piwik\Tracker\RequestProcessor
             'referrerUrl' => 'referer_url',
         ];
         foreach ($visitPropertiesFieldMapping as $finalName => $visitPropertyName) {
-            $extraData[$finalName] = $visitProperties->getProperty($visitPropertyName);
+            $extraData[$finalName] = $this->readableProperty(
+                $visitPropertyName,
+                $visitProperties->getProperty($visitPropertyName),
+            );
         }
         $extraData['interactions'] = $visitProperties->getProperty(
             'visit_total_interactions',
         ) ? (int)$visitProperties->getProperty('visit_total_interactions') : 1;
 
         // Add unmapped properties
+        $unmappedProperties = array_diff_key($visitProperties->getProperties(), array_flip($visitPropertiesFieldMapping));
+        foreach ($unmappedProperties as $visitPropertyName => $value) {
+            $extraData[$visitPropertyName] = $this->readableProperty($visitPropertyName, $value);
+        }
+
+        // url and action_name are already exported, and token_auth is a Matomo credential
+        static $excludedRequestParams = ['url', 'action_name', 'token_auth'];
         $extraData = array_merge(
             $extraData,
-            array_diff_key($visitProperties->getProperties(), array_flip($visitPropertiesFieldMapping)),
-        );
-        $extraData = array_merge(
-            $extraData,
-            array_diff_key($request->getParams(), ['url', 'action_name']),
+            array_diff_key($request->getParams(), array_flip($excludedRequestParams)),
         );
 
         return new TrackingData(
@@ -132,15 +150,29 @@ class RequestProcessor extends \Piwik\Tracker\RequestProcessor
         );
     }
 
+    /**
+     * Converts the binary visit properties to text, as Matomo does when it prints visitor information
+     */
+    private function readableProperty(string $name, mixed $value): mixed
+    {
+        if (!is_string($value)) {
+            return $value;
+        }
+
+        return match ($name) {
+            'idvisitor', 'config_id' => bin2hex($value),
+            'location_ip' => IPUtils::binaryToStringIP($value),
+            default => $value,
+        };
+    }
+
     private function sendDataToLRC(TrackingData $trackingData): ConverterResponse
     {
         try {
             return $this->converter->convert(trackingData: $trackingData);
         } catch (ConversionException $e) {
-            $this->logger->error('Conversion failed', [
-                'error' => $e->getMessage(),
-                'data' => $trackingData->toArray(),
-            ]);
+            $this->logger->error('Conversion failed', ['error' => $e->getMessage()]);
+            $this->logger->debug('Conversion failed: data', ['data' => $trackingData->toArray()]);
             throw $e;
         }
     }
@@ -150,10 +182,8 @@ class RequestProcessor extends \Piwik\Tracker\RequestProcessor
         try {
             return $this->store->store($trace);
         } catch (StorageException $e) {
-            $this->logger->error('Storage failed', [
-                'error' => $e->getMessage(),
-                'data' => $trace->getTrace(),
-            ]);
+            $this->logger->error('Storage failed', ['error' => $e->getMessage()]);
+            $this->logger->debug('Storage failed: data', ['data' => $trace->getTrace()]);
             throw $e;
         }
     }

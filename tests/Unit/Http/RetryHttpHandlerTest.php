@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Piwik\Plugins\Walruc\tests\Unit\Http;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Piwik\Log\LoggerInterface;
 use Piwik\Plugins\Walruc\Exceptions\HttpException;
@@ -98,6 +97,101 @@ class RetryHttpHandlerTest extends TestCase
                 initialDelayMs: self::TEST_INITIAL_DELAY_MS,
             );
         } finally {
+            self::assertEquals(self::DEFAULT_MAX_ATTEMPTS, $attempts);
+        }
+    }
+
+    public function testClientErrorIsNotRetried(): void
+    {
+        // Arrange
+        $attempts = 0;
+        $operation = static function () use (&$attempts) {
+            $attempts++;
+            throw HttpException::unexpectedStatus(401);
+        };
+
+        // Act & Assert
+        try {
+            $this->retryable->executeWithRetry(
+                operation: $operation,
+                logger: $this->logger,
+                operationName: 'test',
+                initialDelayMs: self::TEST_INITIAL_DELAY_MS,
+            );
+            self::fail('HttpException was not thrown');
+        } catch (HttpException $e) {
+            self::assertFalse($e->isRetryable());
+            self::assertEquals(1, $attempts);
+        }
+    }
+
+    public function testMissingTransportIsNotRetried(): void
+    {
+        // Arrange
+        $attempts = 0;
+        $operation = static function () use (&$attempts) {
+            $attempts++;
+            throw HttpException::noTransport();
+        };
+
+        // Act & Assert
+        try {
+            $this->retryable->executeWithRetry(
+                operation: $operation,
+                logger: $this->logger,
+                operationName: 'test',
+                initialDelayMs: self::TEST_INITIAL_DELAY_MS,
+            );
+            self::fail('HttpException was not thrown');
+        } catch (HttpException $e) {
+            self::assertEquals(1, $attempts);
+        }
+    }
+
+    public function testExceptionFromOutsideThePluginIsRetried(): void
+    {
+        // Arrange
+        $attempts = 0;
+        $operation = static function () use (&$attempts) {
+            $attempts++;
+            throw new \UnexpectedValueException('Matomo API error');
+        };
+
+        // Act & Assert
+        try {
+            $this->retryable->executeWithRetry(
+                operation: $operation,
+                logger: $this->logger,
+                operationName: 'test',
+                maxAttempts: 2,
+                initialDelayMs: self::TEST_INITIAL_DELAY_MS,
+            );
+            self::fail('UnexpectedValueException was not thrown');
+        } catch (\UnexpectedValueException $e) {
+            self::assertEquals(2, $attempts);
+        }
+    }
+
+    public function testServerErrorIsRetried(): void
+    {
+        // Arrange
+        $attempts = 0;
+        $operation = static function () use (&$attempts) {
+            $attempts++;
+            throw HttpException::unexpectedStatus(503);
+        };
+
+        // Act & Assert
+        try {
+            $this->retryable->executeWithRetry(
+                operation: $operation,
+                logger: $this->logger,
+                operationName: 'test',
+                initialDelayMs: self::TEST_INITIAL_DELAY_MS,
+            );
+            self::fail('HttpException was not thrown');
+        } catch (HttpException $e) {
+            self::assertTrue($e->isRetryable());
             self::assertEquals(self::DEFAULT_MAX_ATTEMPTS, $attempts);
         }
     }

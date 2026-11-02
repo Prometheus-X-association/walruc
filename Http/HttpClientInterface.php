@@ -14,11 +14,9 @@ interface HttpClientInterface
      * @param string $url The URL to send the request to
      * @param string $method HTTP method (GET, POST, PUT, DELETE, PATCH)
      * @param string $body Request body
-     * @param array $headers Request headers
-     * @param int $timeout Timeout in seconds
+     * @param list<string> $headers Request headers
      *
      * @throws HttpException If request fails after all retries
      */
-    public function sendRequest(string $url, string $method, string $body, array $headers, int $timeout): string;
+    public function sendRequest(string $url, string $method, string $body, array $headers): string;
 }
-
