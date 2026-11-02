@@ -19,12 +19,12 @@ class StoreResponse
     public static function fromJson(string $json): self
     {
         try {
-            $data = json_decode($json, true, JSON_THROW_ON_ERROR);
+            $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
             throw StorageException::storageFailed('Invalid JSON response', $e);
         }
 
-        if (!isset($data[0])) {
+        if (!is_array($data) || !is_string($data[0] ?? null)) {
             throw StorageException::invalidResponse();
         }
 

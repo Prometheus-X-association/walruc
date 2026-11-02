@@ -44,7 +44,6 @@ class TrackingDataTest extends TestCase
         $result = $data->toArray();
 
         // Assert
-        self::assertIsArray($result);
         self::assertEquals('Test Site', $result['siteName']);
         self::assertEquals('127.0.0.1', $result['visitIp']);
         self::assertEquals('user123', $result['user_id']);
@@ -78,7 +77,6 @@ class TrackingDataTest extends TestCase
         $result = $data->toArray();
 
         // Assert
-        self::assertIsArray($result);
         foreach (['siteName', 'visitIp', 'user_id'] as $key) {
             self::assertArrayHasKey($key, $result);
             self::assertNull($result[$key]);
@@ -170,7 +168,6 @@ class TrackingDataTest extends TestCase
             url: 'https://example.com',
             title: 'Test Page',
             timeSpent: 30,
-
         );
 
         // Act
@@ -224,6 +221,9 @@ class TrackingDataTest extends TestCase
         self::assertEquals($url, $result['actionDetails']['url']);
     }
 
+    /**
+     * @return array<string, array{string}>
+     */
     public function validUrlProvider(): array
     {
         return [
@@ -237,6 +237,4 @@ class TrackingDataTest extends TestCase
             'percent encoding' => ['https://example.com/path%20with%20spaces'],
         ];
     }
-
-
 }

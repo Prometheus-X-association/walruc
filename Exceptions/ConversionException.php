@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Piwik\Plugins\Walruc\Exceptions;
 
+use Throwable;
+
 final class ConversionException extends WalrucException
 {
     public static function invalidResponse(?Throwable $previous = null): self

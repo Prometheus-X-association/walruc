@@ -1,10 +1,10 @@
 {
   "name": "Walruc",
   "description": "Web Analytics Learning Records Universal Connector",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "theme": false,
   "require": {
-    "matomo": ">=5.2.0-b5,<6.0.0-b1",
+    "matomo": ">=5.2.0-b5,<7.0.0-b1",
     "php": ">=8.2"
   },
   "authors": [

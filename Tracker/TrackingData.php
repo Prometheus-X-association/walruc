@@ -18,6 +18,7 @@ class TrackingData
     private ?string $url;
     private ?string $title;
     private ?int $timeSpent;
+    /** @var array<string, mixed> */
     private array $extraData;
 
     /**
@@ -28,7 +29,7 @@ class TrackingData
      * @param string|null $url Page URL
      * @param string|null $title Page Title
      * @param int|null $timeSpent
-     * @param array $extraData Additional visit properties
+     * @param array<string, mixed> $extraData Additional visit properties
      */
     public function __construct(
         ?string $siteName,
@@ -69,6 +70,9 @@ class TrackingData
         $this->extraData = $extraData;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return array_merge(
