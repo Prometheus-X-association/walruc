@@ -13,6 +13,7 @@
 |--------------|---------|------|
 | Inokufu | pierre.martel@inokufu.com | Lead maintainer |
 | Inokufu | pierre.martel@inokufu.com | Maintenance contact |
+| Inokufu | guillaume@inokufu.com | R&D Director |
 
 ## Issue Handling
 
